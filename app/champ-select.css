@@ -1,20 +1,75 @@
-* { box-sizing: border-box; }
-html, body, main { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
-body { font: 700 16px/1.1 "Segoe UI", "Microsoft YaHei", sans-serif; color: #e2e8eb; pointer-events: none; user-select: none; }
-main { display: grid; }
+main { display: grid; width: 100%; height: 100%; }
 main.team { grid-template-rows: 30fr repeat(4, 120fr) 55fr; }
 main.bench { grid-template-columns: repeat(9, 88fr) 86fr; }
-header, .chip { overflow: hidden; white-space: nowrap; align-self: start; background: rgba(10, 13, 16, .92); }
-header { justify-self: end; padding: 1.9vw 3vw; font-size: 11.8vw; color: #d4d8d8; border-radius: 3vw; font-weight: 500; }
-.chip { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.team .chip { width: 98%; height: 52vw; border-radius: 5vw; gap: 2.1vw; }
-.team strong { font-size: 17.8vw; }
-.bench .chip { width: 96%; height: 2.74vw; border-radius: .54vw; }
-.bench strong { font-size: 2.02vw; }
-small { font-size: 13.6vw; font-weight: 500; color: #d3d4d2; }
-.mine small { color: #e6c777; }
-.grade-S strong { color: #79e5a8; }
-.grade-A strong { color: #85cf9f; }
-.grade-B strong { color: #80b7f4; }
-.grade-C strong { color: #d4d7d7; }
-.grade-D strong { color: #f08e88; }
+header, .chip {
+  align-self: start;
+  justify-self: start;
+  white-space: nowrap;
+  background: var(--hud-surface);
+  border: 1px solid var(--hud-line);
+}
+header {
+  display: flex;
+  align-items: baseline;
+  gap: .45em;
+  width: max-content;
+  padding: .12em .42em .15em;
+  border-radius: 3.8vw;
+  font-size: 10.4vw;
+  line-height: 1.15;
+  color: var(--hud-muted);
+}
+header b { font-weight: 600; color: #e1e8ed; }
+.chip {
+  --grade-ink: #c9d3da;
+  --grade-fill: #35404a;
+  display: grid;
+  align-content: center;
+  font-variant-numeric: tabular-nums;
+}
+.grade-S { --grade-ink: #9df1cd; --grade-fill: #24453b; }
+.grade-A { --grade-ink: #c7e8a5; --grade-fill: #344330; }
+.grade-B { --grade-ink: #b4d4ff; --grade-fill: #2e4058; }
+.grade-D { --grade-ink: #f4bbaf; --grade-fill: #493631; }
+.team .chip {
+  width: 98%;
+  height: 42vw;
+  gap: 2.4vw;
+  padding-inline: 5vw;
+  border-radius: 5vw;
+  font-size: 17.5vw;
+}
+.team .mine { border-color: #ac905a; }
+.score-line, .ranking { display: flex; align-items: center; justify-content: space-between; gap: .18em; }
+.score-line { line-height: 1; }
+.tier {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.36em;
+  height: 1.4em;
+  border-radius: .25em;
+  background: var(--grade-fill);
+  color: var(--grade-ink);
+  font-size: .67em;
+  font-weight: 750;
+}
+.rate { margin-inline-start: auto; font-weight: 700; letter-spacing: -.035em; }
+.percent { margin-inline-start: .04em; font-size: .71em; font-weight: 550; }
+.ranking { min-width: 0; color: var(--hud-muted); font-size: .65em; line-height: 1; }
+.ranking .place { margin-inline-start: auto; }
+.self { color: var(--hud-gold); font-weight: 650; }
+.bench .chip {
+  align-self: start;
+  justify-self: center;
+  width: 87%;
+  height: 100%;
+  border-radius: .5vw;
+  padding-inline: .54vw;
+  font-size: 1.86vw;
+}
+.bench .tier { font-size: .73em; }
+.no-data .rate { font-size: .8em; font-weight: 500; color: var(--hud-muted); }
+@media (max-width: 84px) {
+  .team .chip { padding-inline: 3vw; }
+  .team .ranking { font-size: .7em; }
+}

@@ -1,31 +1,62 @@
-const tierNames={silver:'白银',gold:'黄金',prismatic:'棱彩'};
-const percent=n=>`${(n*100).toFixed(1)}%`;
-const signed=n=>`${n>0?'+':''}${n.toFixed(1)}pp`;
-window.desktop.onOverlay(payload=>{
-  const card=payload.card||{},stats=card.statistics;
-  const phase=payload.phase;
-  const pending=phase==='preview'||(card.pending&&phase!=='review');
-  const review=phase==='review';
-  const severe=card.warning&&/冲突|失效|无法|不能|缺少|放弃/.test(card.warning);
-  let heading,style='neutral';
-  if(pending){heading='正在确认 · '+(card.name||'本轮候选');style='pending';}
-  else if(review){heading='等待复核 · 上一帧结果';style='review';}
-  else if(card.conflict){heading='组合有冲突';style='warning';}
-  else if(severe){heading='留意触发条件';style='warning';}
-  else if(stats?.lowSample){heading='样本较少 · 谨慎选择';style='warning';}
-  else if(card.best){heading='首选';style='best';}
-  else if(stats&&stats.deltaPP<0){heading='可考虑刷新';style='warning';}
-  else{heading='可选';}
-  document.querySelector('#card').className=style;
-  document.querySelector('#headline').textContent=heading;
-  document.querySelector('#statistics').textContent=pending?'连续画面确认后显示统计与建议':stats?`${stats.deltaPP===null?'':signed(stats.deltaPP)+' · '}胜率 ${percent(stats.winRate)}`:Number.isFinite(card.score)?`机制适配 ${card.score}/100 · 暂无该英雄样本`:'暂无足够数据';
-  document.querySelector('#rank').textContent=pending?'Ctrl+Alt+H / F8 隐藏':stats?`${tierNames[card.tier]||'同阶'}${stats.tierRank ? `第 ${stats.tierRank}/${stats.tierCount} · ${stats.grade}档` : ' · 暂不评级'} · ${stats.games.toLocaleString('zh-CN')} 次`:'依据当前英雄、已选组合与装备';
-  const note=document.querySelector('#note');
-  note.classList.toggle('interaction',Boolean(!pending&&!review&&card.interaction));
-  if (pending) note.textContent='位置从左到右为 1 / 2 / 3';
-  else if (review) note.textContent='当前不可记录，等待画面确认';
-  else if (card.conflict) note.textContent=card.interaction || card.warning;
-  else if (severe) note.textContent=card.warning;
-  else if (card.interaction || card.guide) note.textContent=card.interaction || card.guide;
-  else note.textContent=stats ? `${payload.hero||''} · ${stats.displayPatch||''}样本 · 差值非因果提升` : card.reason || '可在主窗口查看推荐依据';
+'use strict';
+
+const tierNames = { silver: '白银', gold: '黄金', prismatic: '棱彩' };
+const count = new Intl.NumberFormat('zh-CN');
+const field = Object.fromEntries(
+  [...document.querySelectorAll('[id]')].map(element => [element.id, element])
+);
+
+function verdict(card, phase) {
+  if (phase === 'review') return ['待复核', 'review'];
+  if (phase === 'preview' || card.pending) return ['正在确认', 'pending'];
+  if (card.conflict) return ['组合有冲突', 'conflict'];
+  if (/冲突|失效|无法|不能|缺少|放弃/.test(card.warning || '')) return ['留意触发条件', 'conditional'];
+  if (card.statistics?.lowSample) return ['样本较少', 'caution'];
+  if (card.best) return ['首选', 'best'];
+  if (card.statistics?.deltaPP < 0) return ['可考虑刷新', 'caution'];
+  if (!card.statistics && !Number.isFinite(card.score)) return ['资料不足', 'neutral'];
+  return ['可选', 'neutral'];
+}
+
+window.desktop.onOverlay(({ card = {}, phase, hero }) => {
+  const [heading, state] = verdict(card, phase);
+  const pending = state === 'pending';
+  const stats = pending ? null : card.statistics;
+  const scored = !pending && !stats && Number.isFinite(card.score);
+  const tier = tierNames[card.tier] || '';
+  const ranked = stats?.tierRank > 0 && stats.tierCount > 0;
+  field.card.className = state;
+  field.card.classList.toggle('unrated', !pending && !stats && !scored);
+  field.headline.textContent = heading;
+  field.placement.textContent = ranked ? `${tier || '同阶'}第${stats.tierRank}/${stats.tierCount}`
+    : stats ? [tier, '未评级'].filter(Boolean).join(' · ') : tier;
+  field.grade.textContent = ranked && stats.grade ? `${stats.grade}档` : '';
+  field.grade.hidden = !field.grade.textContent;
+
+  field.value.textContent = pending ? (card.name || '识别中')
+    : stats ? (stats.winRate * 100).toFixed(1) : scored ? String(card.score) : '暂无数据';
+  field.unit.textContent = stats ? '%' : scored ? '/100' : '';
+  field.measure.textContent = stats ? '胜率' : scored ? '适配分' : '';
+  const recordHint = Number.isInteger(card.slot) ? `确认后按 Ctrl+Alt+${card.slot + 1} 记录` : '确认后可记录选择';
+  field.sample.textContent = pending ? recordHint
+    : stats ? `${count.format(stats.games)} 次样本` : '暂无该英雄样本';
+  field.sample.hidden = !pending && !stats && !scored;
+
+  const delta = stats?.deltaPP;
+  field.comparison.hidden = !Number.isFinite(delta);
+  field.difference.textContent = Number.isFinite(delta) ? `${delta > 0 ? '+' : ''}${delta.toFixed(1)}` : '';
+  field.delta.dataset.direction = delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat';
+
+  let note = '';
+  if (pending) note = 'Ctrl+Alt+H / F8 隐藏提示';
+  else if (state === 'review') note = '上次识别结果 · 暂停记录';
+  else {
+    if (card.conflict) note = card.interaction || card.warning;
+    else if (state === 'conditional') note = card.warning;
+    else note = card.interaction || card.guide || (!stats && card.reason)
+      || (stats?.displayPatch ? [hero, `${stats.displayPatch} 样本`].filter(Boolean).join(' · ') : '');
+  }
+  field.note.textContent = note || '';
+  field.note.hidden = !note;
+  field.note.classList.toggle('interaction', Boolean(note && note === card.interaction));
 });

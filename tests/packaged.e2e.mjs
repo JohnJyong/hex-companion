@@ -15,9 +15,8 @@ const unpacked = join(resources, 'app.asar.unpacked');
 const packagedJson = path => JSON.parse(extractFile(archive, path).toString('utf8'));
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const version = JSON.parse(await readFile(join(root, 'package.json'), 'utf8')).version;
-assert.equal(version, '0.6.0');
 assert.equal(packagedJson('package.json').version, version, 'rebuild the Windows package after source changes');
-for (const file of ['desktop/main.cjs', 'desktop/preload.cjs', 'desktop/capture.cjs', 'desktop/champ-select.cjs', 'desktop/champ-select-vision.cjs', 'desktop/champ-select-overlays.cjs', 'app/app.mjs', 'app/champ-select.html', 'app/champ-select.js', 'app/champ-select.css', 'desktop/live-runtime.cjs', 'desktop/discovery-scan.cjs', 'app/core/live-controller.mjs', 'app/views.mjs', 'desktop/overlays.cjs', 'app/overlay.html', 'app/overlay.js', 'app/overlay.css',
+for (const file of ['desktop/main.cjs', 'desktop/preload.cjs', 'desktop/capture.cjs', 'desktop/champ-select.cjs', 'desktop/champ-select-vision.cjs', 'desktop/champ-select-overlays.cjs', 'app/app.mjs', 'app/champ-select.html', 'app/champ-select.js', 'app/champ-select.css', 'desktop/live-runtime.cjs', 'desktop/discovery-scan.cjs', 'app/core/live-controller.mjs', 'app/views.mjs', 'desktop/overlays.cjs', 'app/overlay.html', 'app/overlay.js', 'app/overlay.css', 'app/overlay-theme.css',
   'app/build-overlay.html', 'app/build-overlay.js', 'app/build-overlay.css', 'app/core/engine.mjs', 'app/core/augment-rules.mjs', 'app/core/live-game.mjs', 'app/core/augment-stats.mjs', 'app/core/item-stats.mjs', 'app/core/guides.mjs', 'app/guide-views.mjs',
   'app/data/community-guides.json', 'app/data/editorial-guides.json']) {
   assert.equal(digest(extractFile(archive, file)), digest(await readFile(join(root, file))), `${file} must match the tested source`);
@@ -92,6 +91,6 @@ try {
   for(const title of ['火上浇油','暴击律动','神射法师'])assert.ok(result.text.replace(/\s/g,'').includes(title),result.text);
   assert.equal(result.imageBase64,undefined);
   assert.deepEqual(errors,[]);
-  console.log('PASS: Windows 0.6.0 ASAR loads the equipment HUD with local item art, three statistical snapshots and the offline OCR worker, and recognizes three Chinese titles');
+  console.log(`PASS: Windows ${version} ASAR loads the equipment HUD with local item art, three statistical snapshots and the offline OCR worker, and recognizes three Chinese titles`);
   console.log('LIMIT: Windows EXE, GDI screenshot and in-game overlay still require Windows hardware testing');
 } finally {await app.close();await rm(temp,{recursive:true,force:true});}

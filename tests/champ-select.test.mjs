@@ -66,6 +66,6 @@ test('unsupported client geometry produces no requests; matching regions follow 
   const {fixture,requests,advance}=setup(t);await flush();
   fixture.client={...client,bounds:{...client.bounds,width:900,height:750}};await advance(1000);
   assert.equal(requests.length,0);
-  assert.deepEqual(selectStripRect('team',client.bounds),{x:-1588,y:195,width:105,height:565});
+  assert.deepEqual(selectStripRect('team',client.bounds),{x:-1588,y:195,width:116,height:565});
   assert.deepEqual(selectStripRect('bench',{x:100,y:200,width:1280,height:720}),{x:447,y:259,width:585,height:17});
 });

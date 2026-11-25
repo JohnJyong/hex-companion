@@ -89,7 +89,7 @@ function render() {
   const c = db.championMap.get(state.championId);
   document.body.classList.toggle('compact', compact);
   $('#app').innerHTML = `
-    <div class="titlebar"><div class="window-name">HEX COMPANION</div><div class="window-status"><i class="status-dot"></i>本地运行 <span>·</span> v${esc(desktopInfo?.version || '0.6.0')}</div></div>
+    <div class="titlebar"><div class="window-name">HEX COMPANION</div><div class="window-status"><i class="status-dot"></i>本地运行 <span>·</span> v${esc(desktopInfo?.version || '0.6.1')}</div></div>
     <aside class="sidebar">
       <div class="brand"><div class="brand-symbol">${icon('hex', 35)}</div><div class="brand-text"><strong>海克斯参谋</strong><small>HEX COMPANION</small></div></div>
       <div class="nav-caption">你的对局工作台</div>

@@ -58,7 +58,7 @@ try {
   await app.evaluate(({ ipcMain }) => {
     globalThis.__liveE2e = { overlays: [], starts: [], stops: 0, resolveStart: null, overlayEnabled: true };
     const handlers = {
-      'window:info': () => ({ platform: 'win32', version: '0.6.0', pinned: false }),
+      'window:info': () => ({ platform: 'win32', version: '0.6.1', pinned: false }),
       'select:enabled': (_event, enabled) => ({enabled, status:enabled?'等待选人客户端处于前台':'已关闭选人提示'}),
       'capture:windows': () => [
         { id: '99', title: 'Notes', processName: 'notepad', width: 1000, height: 700, isGame: false },

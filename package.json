@@ -1,7 +1,7 @@
 {
   "name": "hex-companion",
   "productName": "海克斯参谋",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Windows 海克斯大乱斗实时识别与决策助手",
   "private": true,
   "license": "MIT",

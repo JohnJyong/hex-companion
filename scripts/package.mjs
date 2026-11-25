@@ -1,7 +1,7 @@
 import { packager } from '@electron/packager';
 import { resolve, join } from 'node:path';
 import { existsSync } from 'node:fs';
-import { copyFile, cp, writeFile } from 'node:fs/promises';
+import { copyFile, cp, readFile, writeFile } from 'node:fs/promises';
 
 const [platform = 'win32', arch = 'x64'] = process.argv.slice(2);
 if (platform !== 'win32' || arch !== 'x64') throw new Error('Only Windows x64 is supported');
@@ -15,6 +15,7 @@ const apps = await packager({
   ignore: [/^\/release($|\/)/, /^\/data($|\/)/, /^\/tests($|\/)/, /^\/scripts($|\/)/, /^\/design-qa\.md$/, /^\/artifacts($|\/)/, /^\/\.git($|\/)/, /^\/\.cache($|\/)/],
   prune: true,
 });
+const { version } = JSON.parse(await readFile(resolve('package.json'), 'utf8'));
 for (const directory of apps) {
   // Keep Electron's license alongside the application's own license.
   await copyFile(resolve('LICENSE'), join(directory, 'LICENSE-HexCompanion.txt'));
@@ -23,7 +24,7 @@ for (const directory of apps) {
   await cp(resolve('third_party'), join(directory, 'third_party'), { recursive: true });
   await cp(resolve('docs'), join(directory, 'docs'), { recursive: true });
   await writeFile(join(directory, '使用说明.txt'), '\uFEFF' + [
-    '海克斯参谋 0.6.0 · Windows 10 / 11 x64 测试版',
+    `海克斯参谋 ${version} · Windows 10 / 11 x64 测试版`,
     '',
     '1. 解压整个文件夹，运行 HexCompanion.exe。不要单独移动 exe。',
     '2. 在选人前打开助手。国服客户端处于前台并出现「可用」英雄栏后，左侧队伍和顶部备选席会显示常规海克斯英雄胜率。在「实时识别」可关闭选人提示。',

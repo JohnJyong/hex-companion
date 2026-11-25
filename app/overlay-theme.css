@@ -1,0 +1,25 @@
+:root {
+  color-scheme: dark;
+  --hud-ink: #f1f5f8;
+  --hud-muted: #bbc8d0;
+  --hud-line: #44525c;
+  --hud-surface: linear-gradient(112deg, rgba(26, 37, 46, .98), rgba(14, 21, 28, .98));
+  --hud-mint: #88e6c4;
+  --hud-gold: #f3d18e;
+  --hud-blue: #a5caff;
+  --hud-rose: #ffacaa;
+  font-family: Inter, "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  color: var(--hud-ink);
+  pointer-events: none;
+  user-select: none;
+}
+[hidden] { display: none !important; }

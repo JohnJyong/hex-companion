@@ -14,11 +14,13 @@ const require = createRequire(import.meta.url);
 const root = resolve(import.meta.dirname, '..');
 const { cardRectangles, sanitizeOverlay } = require('../desktop/overlays.cjs');
 const originalPath = process.argv[2] || process.env.HEX_OVERLAY_REFERENCE_IMAGE;
-const [catalog, augmentStats, frame, original, css, script] = await Promise.all([
+const [catalog, augmentStats, frame, original, theme, css, markup, script] = await Promise.all([
   readFile(join(root, 'app/data/catalog.json'), 'utf8').then(JSON.parse),
   readFile(join(root, 'app/data/augment-stats.json'), 'utf8').then(JSON.parse),
   readFile(join(root, 'tests/fixtures/augment-titles.json'), 'utf8').then(JSON.parse),
-  originalPath ? readFile(originalPath) : null, readFile(join(root, 'app/overlay.css'), 'utf8'), readFile(join(root, 'app/overlay.js'), 'utf8'),
+  originalPath ? readFile(originalPath) : null,
+  readFile(join(root, 'app/overlay-theme.css'), 'utf8'), readFile(join(root, 'app/overlay.css'), 'utf8'),
+  readFile(join(root, 'app/overlay.html'), 'utf8'), readFile(join(root, 'app/overlay.js'), 'utf8'),
 ]);
 const db = indexCatalog({ ...catalog, meta:{...catalog.meta, now:augmentStats.meta.asOf}, augmentStats });
 const matched = matchAugmentFrame(frame, db, { roi: { x: 0, y: 0, width: 1, height: 1 } });
@@ -82,7 +84,8 @@ try {
   } };
   const nativeRects = await app.evaluate(({ screen }, pixels) => pixels.map(rect => {
     const bounds = process.platform === 'win32' ? screen.screenToDipRect(null, rect) : rect;
-    return { ...bounds, width: Math.max(160, bounds.width), height: Math.max(80, bounds.height) };
+    const width = Math.max(160, bounds.width), height = Math.max(80, bounds.height);
+    return { x: Math.round(bounds.x - (width - bounds.width) / 2), y: bounds.y - (height - bounds.height), width, height };
   }), cardRectangles(nativePayload.layout));
   await app.evaluate((_electron, value) => { globalThis.manager.setGameVisible(true); globalThis.manager.update(value); }, nativePayload);
   try { await until(async () => (await visibility()).length === 3 && (await visibility()).every(Boolean)); }
@@ -123,7 +126,7 @@ try {
     if (stats) {
       assert.ok(window.statistics.includes(`${(stats.winRate * 100).toFixed(1)}%`));
       assert.ok(window.statistics.includes(`${stats.deltaPP > 0 ? '+' : ''}${stats.deltaPP.toFixed(1)}pp`));
-      assert.ok(window.rank.includes(stats.games.toLocaleString('zh-CN')));
+      assert.ok(window.statistics.includes(stats.games.toLocaleString('zh-CN')));
       assert.ok(window.rank.includes('黄金第'));
     } else assert.ok(window.statistics.includes('暂无该英雄样本'), 'unavailable observations must not become invented rates');
   }
@@ -175,6 +178,43 @@ try {
   await buildPage.getByText('六格装备已齐').waitFor();
   assert.equal(await buildPage.locator('#item-icon').isVisible(), false);
 
+  const firstId = await app.evaluate(() => globalThis.overlayRecords[0].id);
+  let firstCard;
+  for (const page of app.windows().filter(w => w.url().endsWith('/overlay.html'))) {
+    const owner = await app.browserWindow(page);
+    if (await owner.evaluate(win => win.id) === firstId) firstCard = page;
+    await owner.dispose();
+  }
+  assert.ok(firstCard);
+  const shortSample = { ...nativePayload.cards[0].statistics, games: 80, tierRank: null, deltaPP: null, lowSample: true };
+  for (const [phase, change, heading, hasComparison] of [
+    ['confirmed', {statistics: shortSample}, '样本较少', false],
+    ['confirmed', {conflict: true, interaction: '已选海克斯与当前效果冲突，请检查触发条件。'}, '组合有冲突', true],
+    ['confirmed', {warning: '缺少触发条件，请检查装备'}, '留意触发条件', true],
+    ['preview', {pending: true}, '正在确认', false],
+    ['review', {}, '待复核', true],
+    ['confirmed', {statistics: null, score: null, best: false}, '资料不足', false],
+  ]) {
+    const variant = structuredClone(nativePayload);
+    variant.phase = phase;
+    Object.assign(variant.cards[0], change);
+    await app.evaluate((_electron, value) => {
+      globalThis.manager.update(value);
+      globalThis.overlayRecords[0].setContentSize(160, 80);
+    }, variant);
+    await until(async () => await firstCard.locator('#headline').innerText() === heading);
+    assert.equal(await firstCard.locator('#comparison').isVisible(), hasComparison);
+    const overflow = await firstCard.evaluate(() => {
+      const edge = document.querySelector('#card').getBoundingClientRect();
+      return ['headline','placement','value','measure','sample','delta','note']
+        .filter(id => {
+          const box = document.getElementById(id).getBoundingClientRect();
+          return box.width > 0 && (box.left < edge.left || box.right > edge.right + 1 || box.bottom > edge.bottom + 1);
+        });
+    });
+    assert.deepEqual(overflow, [], heading + ' fits a 160 × 80 DIP card');
+  }
+
   // Hide native windows while rendering a repeatable, full-resolution preview.
   // Iframes use the real overlay CSS/JS and a minimal event bridge, not a redraw.
   await app.evaluate(() => globalThis.manager.setEnabled(false));
@@ -188,9 +228,10 @@ try {
   await page.setViewportSize({ width: frame.width, height: frame.height });
   const background = original ? `<img id="reference" src="data:image/png;base64,${original.toString('base64')}">` : '';
   await page.setContent(`<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071018}#reference{position:absolute;inset:0;width:100%;height:100%}iframe{position:absolute;border:0;background:transparent}</style>${background}`);
+  const article = markup.match(/<article\b[\s\S]*?<\/article>/)[0];
   const frames = rects.map((rect, slot) => {
     const data = JSON.stringify({ ...payload, card: payload.cards[slot], cards: undefined, layout: undefined }).replaceAll('<', '\\u003c');
-    return { rect, html: `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><style>${css}</style></head><body><article id="card"><strong id="headline"></strong><div id="statistics"></div><div id="rank"></div><small id="note"></small></article><script>window.desktop={onOverlay:callback=>{callback(${data});return()=>{}}};</script><script>${script}</script></body></html>` };
+    return { rect, html: `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><style>${theme}\n${css}</style></head><body>${article}<script>window.desktop={onOverlay:callback=>{callback(${data});return()=>{}}};</script><script>${script}</script></body></html>` };
   });
   await page.evaluate(items => { for (const { rect, html } of items) {
     const iframe = document.createElement('iframe');

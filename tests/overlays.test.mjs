@@ -82,10 +82,28 @@ test('equipment stays on the target client without OCR, follows Windows DPI, and
   h.manager.destroy();
 });
 
+test('a small high-DPI card grows upward and stays centered over its OCR title', () => {
+  const h = harness(2);
+  const small = payload(360);
+  const {layout} = small;
+  layout.width = layout.bounds.width = 1280;
+  layout.height = layout.bounds.height = 720;
+  layout.boxes = [220, 530, 840].map(x => ({x, y:360, width:120, height:30}));
+  h.manager.setGameVisible(true);
+  h.manager.update(small);
+  for (const [slot, win] of h.windows.entries()) {
+    const {x,y,width,height} = win.bounds;
+    assert.equal(width, 160);
+    assert.equal(height, 80);
+    assert.ok(Math.abs((x + width / 2) * 2 - (layout.bounds.x + layout.boxes[slot].x + 60)) <= 1);
+    assert.ok((y + height) * 2 <= layout.bounds.y + layout.boxes[slot].y - 9);
+  }
+});
+
 for (const scale of [1, 1.5]) test(`three labels align above 1440p cards at ${scale * 100}% display scaling`, () => {
   const h = harness(scale); h.manager.setGameVisible(true); h.manager.update(payload());
   assert.equal(h.windows.length, 3);
-  const expectedPhysical = [471, 1111, 1751].map(x => ({ x, y: 913, width: 538, height: 151 }));
+  const expectedPhysical = [530, 1170, 1810].map(x => ({ x, y: 930, width: 420, height: 150 }));
   assert.deepEqual(h.conversions.map(call => call.rectangle), expectedPhysical,
     'each label must be centered over its actual title in physical screen coordinates');
   for (let slot = 0; slot < 3; slot++) {

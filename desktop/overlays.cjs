@@ -45,9 +45,9 @@ function cardRectangles(layout) {
   const centers=layout.boxes.map(b=>b.x+b.width/2);
   const gap=Math.min(centers[1]-centers[0],centers[2]-centers[1]);
   if (!finite(gap)||gap<=0) return [];
-  const width=clamp(gap*.84,160,layout.width*.31);
-  const height=clamp(layout.height*.105,90,155);
-  const separation=clamp(layout.height*.025,18,40);
+  const width=Math.min(gap*.84, layout.width*.31, clamp(layout.height*.30,160,420));
+  const height=clamp(layout.height*.108,84,150);
+  const separation=clamp(layout.height*.014,10,24);
   return layout.boxes.map((box,i)=>({
     x:Math.round(layout.bounds.x+clamp(centers[i]-width/2,0,layout.width-width)),
     y:Math.round(layout.bounds.y+Math.max(0,box.y-height-separation)),
@@ -112,7 +112,12 @@ function createCardOverlays({BrowserWindow,screen,preloadPath,htmlPath,platform=
     if (rects.length === 3) {
       for (const card of payload.cards) {
         const rect = dip(rects[card.slot]);
-        draw(card.slot, {x:Math.round(rect.x),y:Math.round(rect.y),width:Math.max(160,Math.round(rect.width)),height:Math.max(80,Math.round(rect.height))},
+        const width = Math.max(160, Math.round(rect.width));
+        const height = Math.max(80, Math.round(rect.height));
+        // Grow a small DIP surface away from its title while keeping it centered.
+        const x = Math.round(rect.x - Math.max(0, width - rect.width) / 2);
+        const y = Math.round(rect.y - Math.max(0, height - rect.height));
+        draw(card.slot, {x, y, width, height},
           {hero:payload.hero, status:payload.status, phase:payload.phase, display:payload.display, actionable:payload.actionable, card});
       }
     } else for (let slot = 0; slot < 3; slot++) hideSlot(slot);

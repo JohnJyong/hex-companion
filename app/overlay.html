@@ -1,1 +1,31 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'"><link rel="stylesheet" href="overlay.css"><title>海克斯参谋 · 候选提示</title></head><body><article id="card" class="pending"><strong id="headline">等待识别</strong><div id="statistics"></div><div id="rank"></div><small id="note"></small></article><script src="overlay.js"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'">
+  <link rel="stylesheet" href="overlay-theme.css">
+  <link rel="stylesheet" href="overlay.css">
+  <title>海克斯参谋 · 候选提示</title>
+</head>
+<body>
+  <article id="card" class="pending">
+    <header>
+      <strong id="headline">正在确认</strong>
+      <span id="rank"><span id="placement"></span><span id="grade" hidden></span></span>
+    </header>
+    <div id="statistics">
+      <div class="metric">
+        <div class="reading"><strong id="value"></strong><span id="unit"></span><span id="measure"></span></div>
+        <span class="caption" id="sample"></span>
+      </div>
+      <div class="comparison" id="comparison" hidden>
+        <span id="delta"><span id="difference"></span><small>pp</small></span>
+        <span class="caption">较英雄基准</span>
+      </div>
+    </div>
+    <p id="note" hidden></p>
+  </article>
+  <script src="overlay.js"></script>
+</body>
+</html>

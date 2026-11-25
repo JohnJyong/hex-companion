@@ -3,7 +3,7 @@
 // Two narrow, click-through surfaces leave the portrait and title sampling
 // regions uncovered, including on Windows builds that black out protected UI.
 const strips={
-  team:{x:332,y:145,width:105,height:565},
+  team:{x:332,y:145,width:116,height:565},
   bench:{x:521,y:89,width:878,height:25},
 };
 
