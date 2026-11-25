@@ -1,0 +1,392 @@
+[
+  {
+    "id": "mechanic-firebrand-vulnerability",
+    "title": "火上浇油配易损，灼烧也能暴击",
+    "championIds": [],
+    "augmentIds": ["ARAM_Firebrand", "ARAM_Vulnerability"],
+    "itemIds": [],
+    "summary": "火上浇油让普攻叠加持续灼烧。已拿其中一枚时，再选另一枚能让这部分持续伤害利用暴击几率，适合能够连续普攻的对局。",
+    "sourceTitle": "ARAM Mayhem · 易损的当前机制",
+    "sourceUrl": "https://arammayhem.com/zh-cn/augments/vulnerability/",
+    "sourceCredit": "搭配理由由本工具根据两枚符文的 26.22 客户端说明整理。原文可核对易损的适用效果。",
+    "patch": "26.22",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial"
+  },
+  {
+    "id": "mechanic-kled-heavy-hitter-goliath",
+    "title": "克烈用歌利亚巨人提高重量级打击手的普攻附伤",
+    "championIds": ["Kled"],
+    "augmentIds": ["ARAM_HeavyHitter", "ARAM_Goliath"],
+    "itemIds": [],
+    "summary": "已经有重量级打击手时，歌利亚巨人提高生命上限，也会增加能贴身打出的普攻附伤。打不到目标时，单靠堆血很难发挥这一组合。",
+    "sourceTitle": "ARAM Mayhem · 克烈的强化组合",
+    "sourceUrl": "https://arammayhem.com/zh-cn/build/kled/",
+    "sourceCredit": "原文列出这对海克斯。这里仅依据 26.22 客户端说明解释最大生命值与普攻的关系。",
+    "patch": "26.22",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial"
+  },
+  {
+    "id": "mechanic-brand-burn-crit",
+    "title": "布兰德的珠光护手与易损怎样影响出装",
+    "championIds": ["Brand"],
+    "augmentIds": ["ARAM_JeweledGauntlet", "ARAM_Vulnerability"],
+    "itemIds": ["2503", "6653", "4645"],
+    "summary": "两枚海克斯一起拿到时，珠光护手覆盖技能伤害，易损覆盖灼烧装备。黯炎火炬和兰德里的折磨能持续施加灼烧，再考虑影焰补法强与法穿。",
+    "sourceTitle": "ARAM Mayhem · 布兰德的强化组合",
+    "sourceUrl": "https://arammayhem.com/zh-cn/build/brand/",
+    "sourceCredit": "原文给出双灼烧路线。按 26.22 客户端效果整理，未将文中的多重暴击说法用于评分。",
+    "patch": "26.22",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial"
+  },
+  {
+    "id": "editorial-yasuo-critical-healing-ritual",
+    "title": "亚索：会心治疗下的毁坏仪式路线",
+    "championIds": ["Yasuo"],
+    "augmentIds": ["ARAM_CriticalHealing"],
+    "itemIds": ["123430", "3153", "3031", "6333"],
+    "summary": "已有会心治疗时，可参考毁坏仪式接破败的护盾续航路线，再按伤害或生存需求选无尽、死亡之舞。需要兵线位移和持续交战空间，进场前先等控制窗口。",
+    "sourceTitle": "AP亚索毁坏仪式玩法攻略",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/ap-yasuo-destroying-ritual-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：苏不出来（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-05-19",
+    "patch": "26.10",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "历史版本路线；不代表纯法强出装更强，装备和护盾联动须以当前游戏说明为准。",
+    "evidenceLocator": "正文：出装顺序；符文选择；实战打法。页面嵌入的新版装备统计不等于正文已更新。"
+  },
+  {
+    "id": "editorial-yone-critical-healing-ritual",
+    "title": "永恩：护盾流先补攻速与续航",
+    "championIds": ["Yone"],
+    "augmentIds": ["ARAM_CriticalHealing"],
+    "itemIds": ["123430", "3153", "3031", "6333"],
+    "summary": "会心治疗配毁坏仪式后，文章建议用破败补攻速和吸血，第三件再在无尽与死亡之舞之间取舍。能持续输出才有回复收益，被集火时应优先补防御。",
+    "sourceTitle": "AP永恩毁坏仪式玩法攻略",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/ap-yone-destroying-ritual-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：声沙Hoarse（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-05-19",
+    "patch": "26.10",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "历史版本条件构筑，不将页面自动更新的统计卡片视为这套路线的当前胜率。",
+    "evidenceLocator": "正文：核心机制；出装顺序；符文优先级。"
+  },
+  {
+    "id": "editorial-xinzhao-mystic-punch-ap",
+    "title": "赵信：秘术冲拳与攻击特效续战",
+    "championIds": ["XinZhao"],
+    "augmentIds": ["ARAM_MysticPunch"],
+    "itemIds": ["3087", "2510", "3115", "3065"],
+    "summary": "文章把电刀、黄昏与黎明作为AP攻速路线核心，并用秘术冲拳改善技能循环。纳什补持续输出；若难以站住，先考虑振奋等防御选择，再追加法强。",
+    "sourceTitle": "AP赵信补丁流玩法攻略",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/xin-zhao-ap-patch-build-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：乱斗君llb（抖音）；摘要依据文章正文。",
+    "publishedAt": "2026-05-17",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "正文未标补丁，且提及当时的电刀改动；不沿用其数值、排名或多目标结算保证。",
+    "evidenceLocator": "正文：核心装备：电刀和黄昏与黎明；强化符文优先级中的秘术冲拳。"
+  },
+  {
+    "id": "editorial-draven-big-shot",
+    "title": "德莱文：大腕仍需暴击几率",
+    "championIds": ["Draven"],
+    "augmentIds": ["BigShot"],
+    "itemIds": ["126697", "6676", "3031"],
+    "summary": "大腕提供的暴击伤害需要暴击几率支撑。能稳定参与击杀时，可参考狂妄接收集者、无尽的路线；接斧生存困难时先补续航或防御，不必强凑三件输出装。",
+    "sourceTitle": "大腕怎么出装？暴击、攻速与德莱文的取舍",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/big-shot-crit-build-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：鲸小鲸海斗版（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-10-26",
+    "patch": "26.21",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "原文按26.21分析；大腕改变攻击节奏，不能只比较面板暴击伤害。",
+    "evidenceLocator": "正文：攻速装仍有用，但要看暴击几率；德莱文可以从这条路线调整。"
+  },
+  {
+    "id": "editorial-weapon-destiny-first-item",
+    "title": "命运之武器：首件先看英雄需求",
+    "championIds": [],
+    "augmentIds": ["WeaponOfDestiny"],
+    "itemIds": ["6695", "4645", "3135"],
+    "summary": "物理爆发可考虑巨蛇之牙，法师按收割或敌方魔抗比较影焰与虚空之杖。不要只为集中成长选择少词条装备：缺蓝、急速或生存时，先解决无法有效参团的问题。",
+    "sourceTitle": "命运之武器属性成长表：第一件装备怎么选",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/weapon-of-destiny-first-item-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：路小非L（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-10-26",
+    "patch": "26.21",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "三件装备是不同伤害路线的备选，不是一套顺序出装。原文按26.21；成长细节以游戏内说明为准。",
+    "evidenceLocator": "正文：先选属性，再考虑叠层；词条少，不等于每个英雄都该出。"
+  },
+  {
+    "id": "editorial-armored-impact-frontline",
+    "title": "装甲冲击：护甲之外还要能接普攻",
+    "championIds": ["Hecarim", "Malphite", "Galio"],
+    "augmentIds": ["ArmoredImpact"],
+    "itemIds": ["3110", "6665", "3143", "3075"],
+    "summary": "施法后要接到普攻才能兑现装甲冲击。人马缺蓝和急速时可优先冰心；需要持续站场与双抗再考虑贾修，并按暴击或普攻回复压力选兰顿、反甲。",
+    "sourceTitle": "装甲冲击怎么出装？锁子甲、冰心和贾修怎么选",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/armored-impact-item-build-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：谭皮革打游戏（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-10-25",
+    "patch": "26.21",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "冰心的蓝量建议主要针对人马；原文没有独立实测无限触发，不作此类保证。",
+    "evidenceLocator": "正文：放完技能，记得接普攻；缺蓝出冰心，持续打架再考虑贾修。"
+  },
+  {
+    "id": "editorial-ethereal-weapon-ap",
+    "title": "艾克／格温：虚幻武器要有特效装备",
+    "championIds": ["Ekko", "Gwen"],
+    "augmentIds": ["ARAM_EtherealWeapon"],
+    "itemIds": ["3100", "3115"],
+    "summary": "技能能频繁命中、已有攻击特效装备时，才考虑围绕虚幻武器改出装。文章的AP分支列出巫妖与纳什；咒刃准备和装备自身触发条件仍需满足。",
+    "sourceTitle": "虚幻武器装备攻略：攻击特效出装公式",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/ethereal-weapon-equipment-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：PBE联盟（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-06-04",
+    "patch": "26.17",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "正文仍标26.17；不要把技能施加攻击特效理解为每次技能都会完成一次完整普攻。",
+    "evidenceLocator": "正文：触发机制怎么判断；四类出装公式的AP行；哪些英雄适合优先选。"
+  },
+  {
+    "id": "editorial-jhin-boom-bass",
+    "title": "烬：低音轰鸣保持暴击路线",
+    "championIds": ["Jhin"],
+    "augmentIds": ["TheBoomAndTheBass"],
+    "itemIds": ["6676", "3036", "3031"],
+    "summary": "先施法再打强化攻击，随后用移速调整距离。文章建议保留收集者、多米尼克与无尽的暴击方向，不因拿到低音轰鸣就转成纯攻速出装。",
+    "sourceTitle": "低音轰鸣攻略：烬、剑姬、亚恒与佛耶戈",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/the-boom-and-the-bass-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：驻韩研究员（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-10-27",
+    "patch": "26.21",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "原文按26.21；强化攻击窗口不等于全程攻速增益。",
+    "evidenceLocator": "正文：先施法，再兑现强化攻击；四种玩法与出装方向的烬行。"
+  },
+  {
+    "id": "editorial-fiora-boom-bass",
+    "title": "剑姬：低音轰鸣服务追击与破绽",
+    "championIds": ["Fiora"],
+    "augmentIds": ["TheBoomAndTheBass"],
+    "itemIds": ["3074", "3078", "6333"],
+    "summary": "用Q与普攻衔接追击、调整破绽角度。文章给出的装备方向是贪欲九头蛇、三相与死亡之舞，后续选择兼顾技能循环和生存。",
+    "sourceTitle": "低音轰鸣攻略：烬、剑姬、亚恒与佛耶戈",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/the-boom-and-the-bass-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：驻韩研究员（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-10-27",
+    "patch": "26.21",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "原文按26.21；一次加速不能保证安全进场。",
+    "evidenceLocator": "正文：四种玩法与出装方向的菲奥娜行。"
+  },
+  {
+    "id": "editorial-karthus-purist-caster",
+    "title": "卡尔萨斯：术师不必强转攻速装",
+    "championIds": ["Karthus"],
+    "augmentIds": ["ARAM_Purist_Caster"],
+    "itemIds": ["3115", "6655", "3089", "3135"],
+    "summary": "术师让攻速成为获取急速的途径，但卡尔萨斯仍需法力、法强和穿透。可逐件比较纳什与常规法装；普攻机会少时，不应为转换收益牺牲真正限制输出的属性。",
+    "sourceTitle": "纯粹术师怎么出装？海克斯大乱斗攻速与急速取舍",
+    "sourceUrl": "https://dtodo.cn/zh-CN/blog/purist-caster-build-guide",
+    "author": "aramgg.com（文章未署个人作者）",
+    "sourceCredit": "文章注明视频来源：PBE联盟（B站）；摘要依据文章正文。",
+    "publishedAt": "2026-09-09",
+    "patch": "26.17",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "原文按26.17；不把旧版装备数值或急速换算直接用于当前收益计算。",
+    "evidenceLocator": "正文：四类英雄的出装路线法师行；FAQ卡尔萨斯应该改买攻速装吗。"
+  },
+  {
+    "id": "editorial-adc-dual-wield-medic",
+    "title": "远程普攻支援：双刀流与花晓之剑",
+    "championIds": ["Tristana", "Twitch", "Nidalee"],
+    "augmentIds": ["ARAM_DualWield"],
+    "itemIds": ["3085", "124011", "6617", "3504"],
+    "summary": "作者的支援流以飓风、花晓之剑起步，借双刀流增加治疗特效，再按攻速需求选香炉或月石。适合愿意牺牲个人伤害保护队友的局面，成型速度较慢。",
+    "sourceTitle": "ARAM: Mayhem, adc-medic build",
+    "sourceUrl": "https://www.reddit.com/r/ARAM/comments/1r5y71l/aram_mayhem_adcmedic_build/",
+    "author": "u/Fyren-1131",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "玩家经验，未标补丁、无对照胜率；原帖评论对部分装备顺序有分歧。奈德丽只在能持续远程攻击时参考。",
+    "evidenceLocator": "原帖：The I did not get Protein Shake build；Augments的Dual Wield；文末成型慢的提醒。"
+  },
+  {
+    "id": "editorial-adc-protein-shake-medic",
+    "title": "花晓支援流：奶昔后转双抗保护",
+    "championIds": ["Tristana", "Twitch", "Nidalee"],
+    "augmentIds": ["ARAM_ProteinShake"],
+    "itemIds": ["3085", "124011", "6617", "3190", "6665"],
+    "summary": "已有花晓之剑支援路线且刷到蛋白粉奶昔时，作者转向月石、钢铁烈阳之匣和贾修，让双抗服务治疗护盾强度。先确认队伍仍有足够伤害和可持续攻击的目标。",
+    "sourceTitle": "ARAM: Mayhem, adc-medic build",
+    "sourceUrl": "https://www.reddit.com/r/ARAM/comments/1r5y71l/aram_mayhem_adcmedic_build/",
+    "author": "u/Fyren-1131",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "这是特定支援构筑分支，不是所有射手的默认出装。原帖未标补丁，无法保证当前英雄能刷到该海克斯。",
+    "evidenceLocator": "原帖：The Yay! I got Protein Shake! build；前文花晓之剑/额外双抗机制；文末慢成型提醒。"
+  },
+  {
+    "id": "editorial-double-tap-vulnerability-onhit",
+    "title": "双发快射＋易损：留装备格给特效",
+    "championIds": ["Kalista", "Vayne", "Kaisa", "KogMaw"],
+    "augmentIds": ["ARAM_DoubleTap", "ARAM_Vulnerability"],
+    "itemIds": ["3031", "3153", "3036", "3124"],
+    "summary": "同时有双发快射与易损时，先核算海克斯已经提供的暴击率。评论作者建议无尽、穿透与破败搭配，再考虑羊刀，避免把所有装备格都用于补暴击。",
+    "sourceTitle": "How do you make double tap/vulnerability work best? — MinnesotanBrie评论",
+    "sourceUrl": "https://www.reddit.com/r/arammayhem/comments/1xkgunc/comment/19rxw9s4x0ytd/",
+    "author": "u/MinnesotanBrie",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "caution": "玩家出装意见，未标补丁；评论区对破败的优先级和穿透选择存在分歧，应结合敌方生命值、护甲和当前暴击率。",
+    "evidenceLocator": "顶层评论列出IE、BoRK、LDR、Guinsoo顺序，并说明Kalista/Vayne/KaiSa/KogMaw常走特效。"
+  },
+  {
+    "id": "note-yasuo-courage-of-the-colossus-1046",
+    "title": "亚索有风时怎样利用双盾进场",
+    "championIds": [
+      "Yasuo"
+    ],
+    "augmentIds": [
+      "ARAM_CourageoftheColossus",
+      "ARAM_CriticalHealing"
+    ],
+    "itemIds": [
+      "123430"
+    ],
+    "summary": "同时拿到巨像的勇气和会心治疗时，可把毁坏仪式纳入护盾路线。先准备好能击飞的旋风，再借控制触发护盾进场。",
+    "sourceTitle": "ARAM Mayhem · 中文组合攻略",
+    "sourceUrl": "https://arammayhem.com/zh-cn/combo/yasuo-courage-of-the-colossus-1046/",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "evidenceLocator": "主组合标题下的玩法说明和强化符文说明。页面版本标在英雄梯级旁，未单独标注投稿验证版本。"
+  },
+  {
+    "id": "note-brand-jeweled-gauntlet-658",
+    "title": "布兰德拿到易损后的灼烧装备",
+    "championIds": [
+      "Brand"
+    ],
+    "augmentIds": [
+      "ARAM_Vulnerability"
+    ],
+    "itemIds": [
+      "2503",
+      "6653"
+    ],
+    "summary": "想用易损强化持续伤害时，可以考虑黯炎火炬和兰德里的折磨。攻略把两件装备的灼烧作为输出来源，适合围绕持续消耗来规划出装。",
+    "sourceTitle": "ARAM Mayhem · 中文组合攻略",
+    "sourceUrl": "https://arammayhem.com/zh-cn/combo/brand-jeweled-gauntlet-658/",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "evidenceLocator": "主组合标题下的玩法说明和强化符文说明。页面版本标在英雄梯级旁，未单独标注投稿验证版本。"
+  },
+  {
+    "id": "note-soraka-protein-shake-619",
+    "title": "索拉卡怎样把双抗转成治疗收益",
+    "championIds": [
+      "Soraka"
+    ],
+    "augmentIds": [
+      "ARAM_ProteinShake"
+    ],
+    "itemIds": [
+      "6617",
+      "6665"
+    ],
+    "summary": "以蛋白粉奶昔搭配月石再生器强化治疗。需要自己先扛住伤害时，攻略还列出千变者贾修，让双抗同时服务于生存和治疗强度。",
+    "sourceTitle": "ARAM Mayhem · 中文组合攻略",
+    "sourceUrl": "https://arammayhem.com/zh-cn/combo/soraka-protein-shake-619/",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "evidenceLocator": "主组合标题下的玩法说明和强化符文说明。页面版本标在英雄梯级旁，未单独标注投稿验证版本。"
+  },
+  {
+    "id": "note-rammus-ethereal-weapon",
+    "title": "拉莫斯开 W 时怎样利用虚幻武器",
+    "championIds": [
+      "Rammus"
+    ],
+    "augmentIds": [
+      "ARAM_EtherealWeapon"
+    ],
+    "itemIds": [],
+    "summary": "这套思路利用 W 的反弹伤害触发攻击特效。选虚幻武器前先看对手是否会持续普攻你，并考虑同一目标的触发间隔。",
+    "sourceTitle": "ARAM Mayhem · 中文组合攻略",
+    "sourceUrl": "https://arammayhem.com/zh-cn/combo/rammus-ethereal-weapon/",
+    "patch": null,
+    "checkedAt": "2026-11-18",
+    "kind": "editorial",
+    "evidenceLocator": "主组合标题下的玩法说明和强化符文说明。页面版本标在英雄梯级旁，未单独标注投稿验证版本。"
+  },
+  {
+    "id": "note-yasuo-ie-purchase",
+    "title": "亚索选升级无尽前，先看这一局的购买计划",
+    "championIds": [
+      "Yasuo"
+    ],
+    "augmentIds": [
+      "ARAM_Upgrade_IE"
+    ],
+    "itemIds": [
+      "3031"
+    ],
+    "summary": "这份亚索选法列出了升级无尽。拿到时先看手里的装备和金币：已经有无尽，装备强化就能用上；计划走暴击路线时，可以把无尽提前。如果眼下要先补防装，比较候选时也要算上等它成装的时间。",
+    "sourceTitle": "ARAM Mayhem · 疾风剑豪出装与强化符文推荐",
+    "sourceUrl": "https://arammayhem.com/zh-cn/build/yasuo/",
+    "evidenceLocator": "26.22 亚索黄金强化栏列出升级无尽。购买时机是依据同版本升级无尽效果整理的使用建议。",
+    "mechanicUrl": "https://arammayhem.com/zh-cn/augments/upgrade-infinity-edge/",
+    "patch": "26.22",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial"
+  },
+  {
+    "id": "note-steel-heart-timing",
+    "title": "钢化你心要给叠层留出时间",
+    "championIds": [],
+    "augmentIds": [
+      "ARAM_Quest_SteelYourHeart"
+    ],
+    "itemIds": [
+      "3084"
+    ],
+    "summary": "拿这张任务前，先看自己有没有心之钢、离要求的层数还有多远。已有层数、还能经常贴近对手时更容易兑现奖励。若要从零开始买装备和叠层，应和这轮能立即生效的海克斯比较。",
+    "sourceTitle": "ARAM Mayhem · 钢化你心任务攻略",
+    "sourceUrl": "https://arammayhem.com/zh-cn/augments/quest-steel-your-heart/",
+    "evidenceLocator": "26.22 强化符文说明列出持有装备和累积层数两个任务条件。",
+    "patch": "26.22",
+    "checkedAt": "2026-11-18",
+    "kind": "editorial"
+  }
+]

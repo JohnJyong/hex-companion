@@ -1,0 +1,13 @@
+node_modules/
+release/
+.DS_Store
+*.log
+data/raw/
+artifacts/
+.cache/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+/design-qa.md

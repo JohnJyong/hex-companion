@@ -1,0 +1,20 @@
+* { box-sizing: border-box; }
+html, body, main { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+body { font: 700 16px/1.1 "Segoe UI", "Microsoft YaHei", sans-serif; color: #e2e8eb; pointer-events: none; user-select: none; }
+main { display: grid; }
+main.team { grid-template-rows: 30fr repeat(4, 120fr) 55fr; }
+main.bench { grid-template-columns: repeat(9, 88fr) 86fr; }
+header, .chip { overflow: hidden; white-space: nowrap; align-self: start; background: rgba(10, 13, 16, .92); }
+header { justify-self: end; padding: 1.9vw 3vw; font-size: 11.8vw; color: #d4d8d8; border-radius: 3vw; font-weight: 500; }
+.chip { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.team .chip { width: 98%; height: 52vw; border-radius: 5vw; gap: 2.1vw; }
+.team strong { font-size: 17.8vw; }
+.bench .chip { width: 96%; height: 2.74vw; border-radius: .54vw; }
+.bench strong { font-size: 2.02vw; }
+small { font-size: 13.6vw; font-weight: 500; color: #d3d4d2; }
+.mine small { color: #e6c777; }
+.grade-S strong { color: #79e5a8; }
+.grade-A strong { color: #85cf9f; }
+.grade-B strong { color: #80b7f4; }
+.grade-C strong { color: #d4d7d7; }
+.grade-D strong { color: #f08e88; }

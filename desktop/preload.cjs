@@ -1,0 +1,23 @@
+const { contextBridge, ipcRenderer } = require('electron');
+contextBridge.exposeInMainWorld('desktop', Object.freeze({
+  setChampSelectEnabled: enabled => ipcRenderer.invoke('select:enabled', enabled),
+  onChampSelectStatus: callback => { const fn=(_event,state)=>callback(state); ipcRenderer.on('select:status',fn); return ()=>ipcRenderer.removeListener('select:status',fn); },
+  captureWindows: () => ipcRenderer.invoke('capture:windows'),
+  captureCapabilities: () => ipcRenderer.invoke('capture:capabilities'),
+  captureStart: options => ipcRenderer.invoke('capture:start', options),
+  captureStop: () => ipcRenderer.invoke('capture:stop'),
+  exportDiagnostics: () => ipcRenderer.invoke('capture:export-diagnostics'),
+  updateOverlay: payload => ipcRenderer.invoke('overlay:update', payload),
+  setOverlayVisible: enabled => ipcRenderer.invoke('overlay:visibility', enabled),
+  toggleOverlay: () => ipcRenderer.invoke('overlay:toggle'),
+  onOverlayVisibility: callback => { const fn = (_event, data) => callback(data); ipcRenderer.on('overlay:visibility', fn); return () => ipcRenderer.removeListener('overlay:visibility', fn); },
+  onCapture: callback => { const fn = (_event, data) => callback(data); ipcRenderer.on('capture:frame', fn); return () => ipcRenderer.removeListener('capture:frame', fn); },
+  onRecord: callback => { const fn = (_event, slot) => callback(slot); ipcRenderer.on('capture:record', fn); return () => ipcRenderer.removeListener('capture:record', fn); },
+  onOverlay: callback => { const fn = (_event, data) => callback(data); ipcRenderer.on('overlay:state', fn); return () => ipcRenderer.removeListener('overlay:state', fn); },
+  pin: () => ipcRenderer.invoke('window:pin'),
+  compact: () => ipcRenderer.invoke('window:compact'),
+  info: () => ipcRenderer.invoke('window:info'),
+  exportSession: (content) => ipcRenderer.invoke('session:export', content),
+  importSession: () => ipcRenderer.invoke('session:import'),
+  openLink: (url) => ipcRenderer.invoke('link:open', url),
+}));

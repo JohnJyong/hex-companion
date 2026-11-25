@@ -1,0 +1,17 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+body { padding: 2px; user-select: none; font: 12px/1.25 "Microsoft YaHei", "Segoe UI", sans-serif; color: #e4eaeb; }
+article { display: grid; grid-template-rows: 16px 34px 16px 16px; align-content: space-between; height: 100%; padding: 7px 10px; overflow: hidden; background: rgba(9, 18, 24, .94); border: 1px solid #596a68; border-left: 3px solid #83cfb4; border-radius: 7px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+header strong { color: #a2dfc9; font-size: 12px; }
+header span, footer, #caption { color: #a9b8be; }
+.purchase { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; grid-template-rows: 13px 21px; align-items: center; column-gap: 8px; }
+.purchase:has(img[hidden]) { grid-template-columns: 0 minmax(0, 1fr) auto; column-gap: 0; }
+.purchase img { grid-area: 1 / 1 / 3 / 2; width: 32px; height: 32px; border: 1px solid #79674b; border-radius: 4px; }
+.purchase div { display: contents; }
+.purchase b, #caption { display: block; }
+#caption { grid-area: 1 / 2 / 2 / 4; font-size: 10px; }
+.purchase b { grid-area: 2 / 2; font-size: 15px; }
+#price { grid-area: 2 / 3; color: #ebc982; font-size: 11px; font-variant-numeric: tabular-nums; }
+.line, footer, header span, .purchase b, #caption { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+footer { font-size: 11px; border-top: 1px solid #354148; padding-top: 2px; }

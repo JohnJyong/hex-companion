@@ -1,0 +1,30 @@
+{
+  "name": "hex-companion",
+  "productName": "海克斯参谋",
+  "version": "0.6.0",
+  "description": "Windows 海克斯大乱斗实时识别与决策助手",
+  "private": true,
+  "license": "MIT",
+  "repository": "github:JohnJyong/hex-companion",
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.mjs",
+    "test:desktop": "node tests/desktop.e2e.mjs",
+    "data:update": "python3 scripts/update-data.py",
+    "package:win": "node scripts/package.mjs win32 x64",
+    "test:ocr": "node tests/ocr.e2e.mjs",
+    "test:live": "node tests/live-desktop.e2e.mjs",
+    "test:select": "node tests/champ-select.e2e.mjs",
+    "test:overlay": "node tests/overlay.e2e.mjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "45.3.3",
+    "playwright": "1.65.1"
+  },
+  "dependencies": {
+    "tesseract.js": "7.0.0"
+  }
+}
