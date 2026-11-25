@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell, Menu, screen, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu, screen, nativeImage, net, protocol } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const { createCaptureService } = require('./capture.cjs');
@@ -9,12 +9,20 @@ const { createCardOverlays } = require('./overlays.cjs');
 const { createChampSelect } = require('./champ-select.cjs');
 const { createSelectVision, createChampionBank } = require('./champ-select-vision.cjs');
 const { createSelectOverlays } = require('./champ-select-overlays.cjs');
+const { createDataUpdates } = require('./data-updates.cjs');
 
 let window;
 let fullBounds;
 let compact = false;
 const allowedHosts = new Set(['www.leagueoflegends.com', 'support.riotgames.com', 'developer.riotgames.com', 'raw.communitydragon.org', 'arammayhem.com', 'creativecommons.org', 'github.com', 'aramhex.com']);
 if (process.env.HEX_COMPANION_TEST_USER_DATA) app.setPath('userData', process.env.HEX_COMPANION_TEST_USER_DATA);
+protocol.registerSchemesAsPrivileged([{scheme:'hexasset', privileges:{standard:true,secure:true}}]);
+const appRoot = path.join(__dirname, '../app');
+const updates = createDataUpdates({
+  appRoot, storage:path.join(app.getPath('userData'), 'data-updates', 'v1'),
+  fetcher:(url, options) => net.fetch(url, options), notify:state => send('data:status', state),
+});
+const iconBase = () => updates.current()?.icons ? `hexasset://catalog/r${updates.current().manifest.revision}/` : '';
 
 function handle(channel, callback) {
   ipcMain.handle(channel, (event, ...args) => {
@@ -67,6 +75,17 @@ handle('window:compact', () => {
   return compact;
 });
 handle('window:info', () => ({ platform: process.platform, version: app.getVersion(), pinned: window.isAlwaysOnTop() }));
+handle('data:load', () => ({tables:updates.current().tables, iconBase:iconBase(), status:updates.status()}));
+handle('data:check', () => updates.check());
+handle('data:auto', (_event, enabled) => updates.setAutomatic(enabled));
+handle('data:apply', () => {
+  if (runtime.isRunning()) throw new Error('请先停止本局识别，再应用新数据');
+  if (!updates.apply()) return false;
+  champSelect.setEnabled(false);
+  selectLabels.hide();
+  championBank = guideSourceLinks = null;
+  return true;
+});
 handle('session:export', async (_event, content) => {
   if (typeof content !== 'string' || content.length > 262144) throw new Error('对局文件过大');
   JSON.parse(content);
@@ -85,11 +104,10 @@ handle('session:import', async () => {
 let guideSourceLinks;
 async function isGuideSource(url) {
   if (!guideSourceLinks) {
-    const lists = await Promise.all(['editorial-guides', 'community-guides'].map(async name => {
-      const data = await fs.readFile(path.join(__dirname, '../app/data', name + '.json'), 'utf8');
-      return JSON.parse(data);
-    }));
-    guideSourceLinks = new Set(lists.flat().map(entry => new URL(entry.sourceUrl).href));
+    const {safeSourceUrl} = await import('../app/core/guides.mjs');
+    const tables = updates.current().tables;
+    guideSourceLinks = new Set([...tables['editorial-guides'], ...tables['community-guides']]
+      .map(entry => safeSourceUrl(entry.sourceUrl)).filter(Boolean));
   }
   return guideSourceLinks.has(url.href);
 }
@@ -99,8 +117,19 @@ handle('link:open', async (_event, value) => {
   if (url.protocol !== 'https:' || url.username || url.password || (!allowedHosts.has(url.hostname) && !await isGuideSource(url))) throw new Error('不支持此链接');
   await shell.openExternal(url.href);
 });
-app.whenReady().then(openWindow);
-app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) openWindow(); });
+app.whenReady().then(async () => {
+  await updates.ready();
+  protocol.handle('hexasset', request => {
+    const base = iconBase();
+    const bytes = base && request.url.startsWith(base) && updates.current().icons.get(request.url.slice(base.length));
+    return bytes ? new Response(bytes, {headers:{'Content-Type':'image/png', 'Cache-Control':'public, max-age=31536000, immutable'}})
+      : new Response(null, {status:404});
+  });
+  openWindow();
+  void updates.autoCheck();
+  setInterval(() => void updates.autoCheck(), 15 * 60 * 1000).unref();
+  app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) openWindow(); });
+});
 app.on('window-all-closed', () => app.quit());
 
 // The three transparent labels follow the selected game window's card titles.
@@ -123,6 +152,7 @@ function recordDiagnostic(data) {
 }
 function send(channel, payload) { if (window && !window.isDestroyed()) window.webContents.send(channel, payload); }
 const overlays = createCardOverlays({ BrowserWindow, screen,
+  getIconBase:iconBase,
   preloadPath: path.join(__dirname, 'overlay-preload.cjs'), htmlPath: path.join(__dirname, '../app/overlay.html'),
   onVisibility: state => { champSelect.setVisible(state.enabled); send('overlay:visibility', state); },
 });
@@ -130,7 +160,8 @@ const selectLabels = createSelectOverlays({BrowserWindow,screen,
   preloadPath:path.join(__dirname,'overlay-preload.cjs'), htmlPath:path.join(__dirname,'../app/champ-select.html')});
 let championBank;
 function getChampionBank() {
-  championBank ??= createChampionBank(nativeImage, require('../app/data/catalog.json'), require('../app/data/champion-stats.json'), path.join(__dirname,'../app'));
+  const {tables, icons} = updates.current();
+  championBank ??= createChampionBank(nativeImage, tables.catalog, tables['champion-stats'], appRoot, icons);
   return championBank;
 }
 const champSelect=createChampSelect({capture:createCaptureService({scriptPath}),

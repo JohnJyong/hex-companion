@@ -1,7 +1,8 @@
 import { indexCatalog, TIERS, STRATEGIES, rankCandidates, scoreAugment, recommendBuilds, combinationInsights, interactionLabel, canEquip } from './core/engine.mjs';
 import { championProfile, FEATURE_NAMES, ALIASES } from './core/profiles.mjs';
 import { augmentRule } from './core/augment-rules.mjs';
-import { emptySession, validateSession, chooseAugment } from './core/session.mjs';
+import { emptySession, validateSession, restoreSession, chooseAugment } from './core/session.mjs';
+import { advice, useRecommendationRules } from './core/recommendation-data.mjs';
 import { createLiveController } from './core/live-controller.mjs';
 import { heroStat, renderStats, statsRows, renderLive, liveBanner } from './views.mjs';
 import { championStats, formatWinRate } from './core/champion-stats.mjs';
@@ -53,6 +54,7 @@ const SELECT_PREF = 'hex-companion.champ-select.v1';
 let selectStatus = {enabled:false,status:'等待客户端'};
 let db, state, undo = [], page = 'desk', previewId = null, buildIndex = 0, modalState = null;
 let live, statsData, statsQuery = '', statsRole = 'all', statsSort = 'winRate';
+let dataStatus;
 let captureWindows = [], captureWindowId = '', captureLoading = false, captureError = '';
 const captureOptions = { overlay: true, syncItems: true, roi: { x: 0, y: 0, width: 1, height: 1 } };
 let liveRenderKey = '';
@@ -81,15 +83,15 @@ function commit(next, message, preservePreview = false) {
   if (message) toast(message);
 }
 function demoSession() {
-  return validateSession({ ...emptySession(), championId: 'Jinx', selected: ['ARAM_Deft'],
+  return restoreSession({ ...emptySession(), championId: 'Jinx', selected: ['ARAM_Deft'],
     candidates: ['CriticalRhythm', 'ARAM_Firebrand', 'ARAM_Marksmage'], tier: 'gold', demo: true,
-  }, db);
+  }, db).state;
 }
 function render() {
   const c = db.championMap.get(state.championId);
   document.body.classList.toggle('compact', compact);
   $('#app').innerHTML = `
-    <div class="titlebar"><div class="window-name">HEX COMPANION</div><div class="window-status"><i class="status-dot"></i>本地运行 <span>·</span> v${esc(desktopInfo?.version || '0.6.1')}</div></div>
+    <div class="titlebar"><div class="window-name">HEX COMPANION</div><div class="window-status"><i class="status-dot"></i>本地运行 <span>·</span> v${esc(desktopInfo?.version || '0.7.0')}</div></div>
     <aside class="sidebar">
       <div class="brand"><div class="brand-symbol">${icon('hex', 35)}</div><div class="brand-text"><strong>海克斯参谋</strong><small>HEX COMPANION</small></div></div>
       <div class="nav-caption">你的对局工作台</div>
@@ -191,12 +193,39 @@ function atlasResults() {
   return `<p class="results-caption">${list.length} 个海克斯 ${state.championId ? `· 适配分基于当前英雄「${esc(db.championMap.get(state.championId).name)}」` : '· 选择英雄后显示适配分'}</p><div class="atlas-grid">${list.map(a => { const result = scoreAugment(a, state, db); return `<button class="atlas-card" data-action="detail" data-id="${a.id}"><div class="atlas-heading">${img(a.icon, '')}<div><strong>${esc(a.name)}</strong><span class="tier-${a.tier}" style="font-size:9px">${TIERS[a.tier]}${a.abilitySpecific ? ' · 指定技能' : ''}</span></div></div><p class="description">${esc(augmentRule(a).summary || a.description)}</p><div class="atlas-foot"><span>${a.descriptionScope === 'unverified' ? '机制待核对' : augmentRule(a).reviewed ? '专属适配规则' : '通用适配规则'}</span><span>${result.score === null ? '—' : `${result.score} 分`} ${icon('arrow', 11)}</span></div></button>`; }).join('') || '<p class="empty-search">没有找到匹配的海克斯，试试简称或效果关键词。</p>'}</div>`;
 }
 
+const updateDate = value => value ? new Intl.DateTimeFormat('zh-CN', {
+  timeZone:'Asia/Shanghai', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false,
+}).format(new Date(value)) : '尚无记录';
+function renderDataUpdates() {
+  if (!dataStatus?.active) return '<h2>数据更新</h2><p>在 Windows 桌面助手中可获取数据更新。</p>';
+  const {active, pending, phase, error, automatic, lastChecked} = dataStatus;
+  const busy = phase === 'checking' || phase === 'downloading';
+  const capture = live?.snapshot();
+  const inGame = capture?.active || capture?.busy;
+  const message = {
+    checking:'正在检查数据版本…', downloading:'正在下载并校验新数据…', current:'已是当前发布版本',
+    ahead:'本地数据版本较新', error, recovered:error,
+  }[phase];
+  return `<h2>${icon('download')}数据更新 <span class="badge teal">游戏 ${esc(active.patch)}</span></h2>
+    <div class="setting-row"><div><strong>当前数据 #${active.revision}</strong><p>${active.source === 'bundled' ? '软件内置' : '已下载到本机'} · 胜率统计截至 ${esc(updateDate(active.statsAsOf))}（北京时间）</p></div></div>
+    <div class="setting-row"><div><strong>自动检查更新</strong><p>每 6 小时检查一次。新数据下载后，下次启动自动生效。</p></div><label class="update-toggle"><input id="auto-data-updates" aria-label="自动检查数据更新" type="checkbox" ${automatic ? 'checked' : ''}>${automatic ? '已开启' : '已关闭'}</label></div>
+    <div class="setting-row"><div><strong>${pending ? `已下载 #${pending.revision} · 游戏 ${esc(pending.patch)}` : '检查数据源'}</strong>
+    <p aria-live="polite">${message ? esc(message) + '<br>' : ''}${pending ? (inGame ? '停止对局识别后可立即应用。' : '可立即应用并刷新工作台。') : '上次成功检查　' + esc(updateDate(lastChecked))}</p></div>
+    <div class="update-actions"><button class="btn small" data-action="check-data" ${busy ? 'disabled' : ''}>检查更新</button>
+    ${pending ? `<button class="btn small primary" data-action="apply-data" ${busy || inGame ? 'disabled' : ''}>应用新数据</button>` : ''}</div></div>`;
+}
+function updateDataStatus(next) {
+  dataStatus = next;
+  const panel = $('#data-updates');
+  if (panel) panel.innerHTML = renderDataUpdates();
+}
 function renderSettings() {
   const reviewed = db.augments.filter(a => augmentRule(a).reviewed).length;
   return `<div class="page-header"><div class="eyebrow">本地工作台 / SETTINGS</div><h1>设置与数据</h1><p>了解建议从哪里来，以及当前版本能做到什么。</p></div><div class="settings-grid">
+    <section class="panel settings-card" id="data-updates">${renderDataUpdates()}</section>
     <section class="panel settings-card"><h2>${icon('compact')}桌面体验</h2><div class="setting-row"><div><strong>窗口置顶</strong><p>切换到游戏时仍可查看助手，适合无边框窗口模式。</p></div><button class="btn small ${pinned ? 'primary' : ''}" data-action="pin">${pinned ? '已开启' : '开启'}</button></div><div class="setting-row"><div><strong>精简窗口</strong><p>用更窄的窗口查看候选和出装，保留桌面空间。</p></div><button class="btn small" data-action="compact">${compact ? '展开' : '切换'}</button></div><div class="setting-row"><div><strong>游戏画面自动识别</strong><p>Windows 本地 OCR 读取候选，Live Client 同步英雄与成装。</p></div><button class="btn small" data-action="page" data-page="live">设置识别</button></div><div class="setting-row"><div><strong>对局自动保存</strong><p>每次修改后保存到本机。重新打开时恢复当前对局。</p></div><span class="badge teal">已开启</span></div></section>
-    <section class="panel settings-card"><h2>${icon('database')}离线数据库 <span class="badge">${db.meta.patch}</span></h2><p>数据日期 ${db.meta.asOf} · 客户端资源 ${db.meta.dataDragonVersion}<br>随软件附带，日常查询和推荐无需联网。</p><div class="stat-grid"><div class="stat-box"><strong>${db.champions.length}</strong><span>位英雄</span></div><div class="stat-box"><strong>${db.augments.length}</strong><span>个海克斯</span></div><div class="stat-box"><strong>${db.items.length}</strong><span>件装备</span></div></div><p>${esc(db.meta.note)}</p><div class="notice">这是客户端候选池，可能包含服务器暂时停用的符文；请只录入游戏实际给出的选项。模式限定为海克斯大乱斗，不适用于斗魂竞技场或经典风格版。</div></section>
-    <section class="panel settings-card"><h2>${icon('chart')}推荐依据</h2><p>英雄机制 55 分 + 已选组合 25 分 + 已有装备 10 分 + 对局环境 10 分，再扣除触发条件和冲突成本。</p><div class="setting-row"><div><strong>${reviewed} 个海克斯带专属规则</strong><p>其余已知效果使用关键词规则；没有可靠机制资料的条目不评分。</p></div></div><div class="setting-row"><div><strong>出装比较</strong><p>比较 13 组基础路径及技能暴击、灼烧暴击、技能特效和法力成长路径，保留已购并检查装备互斥。</p></div></div><div class="notice">已接入定版英雄与海克斯统计，机制分仍不代表胜率或伤害模拟器。分数用于当前条件下的相对比较，不能保证收益最大。指定技能类符文尚未细分具体技能槽位。</div></section>
+    <section class="panel settings-card"><h2>${icon('database')}离线数据库 <span class="badge">${db.meta.patch}</span></h2><p>数据日期 ${db.meta.asOf} · 客户端资源 ${db.meta.dataDragonVersion}<br>目录、胜率、攻略和图标均保存在本机，查询和推荐可离线使用。</p><div class="stat-grid"><div class="stat-box"><strong>${db.champions.length}</strong><span>位英雄</span></div><div class="stat-box"><strong>${db.augments.length}</strong><span>个海克斯</span></div><div class="stat-box"><strong>${db.items.length}</strong><span>件装备</span></div></div><p>${esc(db.meta.note)}</p><div class="notice">这是客户端候选池，可能包含服务器暂时停用的符文；请只录入游戏实际给出的选项。模式限定为海克斯大乱斗，不适用于斗魂竞技场或经典风格版。</div></section>
+    <section class="panel settings-card"><h2>${icon('chart')}推荐依据</h2><p>英雄机制 55 分 + 已选组合 25 分 + 已有装备 10 分 + 对局环境 10 分，再扣除触发条件和冲突成本。</p><div class="setting-row"><div><strong>${reviewed} 个海克斯带专属规则</strong><p>其余已知效果使用关键词规则；没有可靠机制资料的条目不评分。</p></div></div><div class="setting-row"><div><strong>出装比较</strong><p>比较 ${advice.builds.length} 组基础路径及技能暴击、灼烧暴击、技能特效和法力成长路径，保留已购并检查装备互斥。</p></div></div><div class="notice">已接入当前数据版本的英雄与海克斯统计，机制分仍不代表胜率或伤害模拟器。分数用于当前条件下的相对比较，不能保证收益最大。指定技能类符文尚未细分具体技能槽位。</div></section>
     <section class="panel settings-card"><h2>${icon('link')}资料来源</h2>${db.meta.sources.map(s => `<button class="source-link" data-action="external" data-url="${esc(s.url)}">${esc(s.name)} ${icon('arrowup', 13)}</button>`).join('')}<p class="small-note">英雄、装备、图标及游戏资料版权归 Riot Games。海克斯参谋为独立社区工具，未经 Riot Games 背书。</p></section>
     <section class="panel settings-card wide"><h2>${icon('download')}对局文件</h2><p>导出为 JSON 文件，可在另一台 Windows 电脑的海克斯参谋中继续。金币仅用于比较下一件成装价格；记录已购不会自动扣款。</p><div class="detail-actions">${btn('export', icon('download', 14) + ' 导出当前对局')}${btn('import', icon('upload', 14) + ' 导入对局')}${btn('demo', '载入示例对局', 'ghost')}</div></section>
   </div>`;
@@ -222,6 +251,9 @@ function updateSelectStatus(next) {
 function onLiveChange() {
   const s=live?.snapshot();
   if(!s)return;
+  const apply = document.querySelector('[data-action="apply-data"]');
+  if (apply && apply.disabled !== Boolean(s.active || s.busy)
+    && !['checking','downloading'].includes(dataStatus.phase)) updateDataStatus(dataStatus);
   const key=JSON.stringify([s.active,s.fresh,s.phase,s.displayCandidates,s.status,s.error,s.gameConnected]);
   if(page==='live' && !['INPUT','SELECT','SUMMARY'].includes(document.activeElement?.tagName)) refreshLiveView();
   if(page==='desk' && key!==liveRenderKey && !modal.open && !['INPUT','SELECT'].includes(document.activeElement?.tagName)) render();
@@ -337,6 +369,11 @@ document.addEventListener('click', async event => {
   const { action, id, value } = target.dataset;
   try {
     if (action.startsWith('live-')) { await handleLiveAction(action); }
+    else if (action === 'check-data') updateDataStatus(await window.desktop.checkDataUpdates());
+    else if (action === 'apply-data' && await window.desktop.applyDataUpdate()) {
+      sessionStorage.setItem('return-to-data-settings', '1');
+      location.reload();
+    }
     else if (action === 'guide-page') {
       guideFilters.page = Number(value);
       refreshGuideResults();
@@ -422,6 +459,11 @@ document.addEventListener('input', event => {
   if (event.target.id === 'atlas-search') { atlasQuery = event.target.value; $('#atlas-results').innerHTML = atlasResults(); }
 });
 document.addEventListener('change', event => {
+  if (event.target.id === 'auto-data-updates') {
+    window.desktop.setAutomaticDataUpdates(event.target.checked).then(updateDataStatus).catch(error => {
+      toast(error.message); updateDataStatus(dataStatus);
+    });
+  }
   if (['guide-type', 'guide-hero'].includes(event.target.id)) {
     if (event.target.id === 'guide-type') guideFilters.type = event.target.value;
     else guideFilters.heroOnly = event.target.checked;
@@ -454,24 +496,48 @@ modal.addEventListener('click', event => { if (event.target === modal) { const r
 modal.addEventListener('close', () => { modalState = null; });
 
 try {
-  const response = await fetch('./data/catalog.json');
-  if (!response.ok) throw new Error('无法读取离线数据库');
-  db = indexCatalog(await response.json());
-  const statsResponse = await fetch('./data/champion-stats.json');
-  if (!statsResponse.ok) throw new Error('无法读取英雄胜率数据');
-  statsData = await statsResponse.json();
-  const additional = await Promise.all(['augment-stats','item-stats'].map(async name => { const response = await fetch(`./data/${name}.json`); if(!response.ok) throw new Error(`无法读取${name}统计`); return response.json(); }));
-  [db.augmentStats,db.itemStats]=additional;
-  const guideLists = await Promise.all(['editorial-guides', 'community-guides'].map(async name => {
-    const response = await fetch(`./data/${name}.json`);
-    if (!response.ok) throw new Error('无法读取离线攻略库');
-    return response.json();
-  }));
-  guideIndex = indexGuides(guideLists.flat(), db);
+  let tables;
+  if (window.desktop?.loadData) {
+    window.desktop.onDataStatus(updateDataStatus);
+    const data = await window.desktop.loadData();
+    tables = data.tables;
+    // A download can finish while the initial catalog is crossing IPC.
+    dataStatus ??= data.status;
+    if (data.iconBase) for (const group of ['champions','augments','items']) {
+      for (const record of tables.catalog[group]) record.icon = data.iconBase + record.icon;
+    }
+  } else {
+    const names = ['catalog','champion-stats','augment-stats','item-stats','editorial-guides','community-guides','recommendation-rules'];
+    tables = Object.fromEntries(await Promise.all(names.map(async name => {
+      const response = await fetch(`./data/${name}.json`);
+      if (!response.ok) throw new Error(`无法读取本地资料 ${name}`);
+      return [name, await response.json()];
+    })));
+  }
+  useRecommendationRules(tables['recommendation-rules']);
+  db = indexCatalog(tables.catalog);
+  statsData = tables['champion-stats'];
+  db.augmentStats = tables['augment-stats'];
+  db.itemStats = tables['item-stats'];
+  guideIndex = indexGuides([...tables['editorial-guides'], ...tables['community-guides']], db);
   db.guideIndex = guideIndex;
-  let restoreError = false;
-  try { const saved = localStorage.getItem(STORE); state = saved ? validateSession(JSON.parse(saved), db) : demoSession(); }
-  catch { state = emptySession(); restoreError = true; }
+  let restoreMessage;
+  try {
+    const saved = localStorage.getItem(STORE);
+    if (!saved) state = demoSession();
+    else {
+      const restored = restoreSession(JSON.parse(saved), db);
+      state = restored.state;
+      if (restored.migrated) {
+        localStorage.setItem(STORE + '.before-update', saved);
+        save();
+        restoreMessage = '已恢复本局，旧版本中失效的条目已移除';
+      }
+    }
+  } catch { state = emptySession(); restoreMessage = '旧对局格式无法恢复，已创建空白对局'; }
+  if (sessionStorage.getItem('return-to-data-settings')) {
+    page = 'settings'; sessionStorage.removeItem('return-to-data-settings');
+  }
   if (window.desktop) { desktopInfo = await window.desktop.info(); pinned = desktopInfo.pinned; }
   if (desktopInfo?.platform==='win32' && window.desktop.setChampSelectEnabled) {
     window.desktop.onChampSelectStatus(updateSelectStatus);
@@ -481,7 +547,7 @@ try {
   live = createLiveController({ desktop: window.desktop, db, getState: () => state, commit: autoCommit, onChange: onLiveChange, toast });
   window.desktop?.onOverlayVisibility?.(value => { if(captureOptions.overlay !== value.enabled){captureOptions.overlay=value.enabled;refreshLiveView();} });
   render();
-  if (restoreError) toast('旧对局格式无法恢复，已创建空白对局');
+  if (restoreMessage) toast(restoreMessage);
 } catch (error) {
   $('#app').innerHTML = `<div class="loading"><div><h2>启动时遇到问题</h2><p style="margin-top:15px">${esc(error.message)}</p><p style="margin-top:10px">请确认应用的离线数据文件完整。</p></div></div>`;
 }

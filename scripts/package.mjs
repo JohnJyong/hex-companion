@@ -2,6 +2,7 @@ import { packager } from '@electron/packager';
 import { resolve, join } from 'node:path';
 import { existsSync } from 'node:fs';
 import { copyFile, cp, readFile, writeFile } from 'node:fs/promises';
+import { buildDataPackage } from './pack-data.mjs';
 
 const [platform = 'win32', arch = 'x64'] = process.argv.slice(2);
 if (platform !== 'win32' || arch !== 'x64') throw new Error('Only Windows x64 is supported');
@@ -12,8 +13,15 @@ const apps = await packager({
   platform, arch, overwrite: true, asar: { unpack: '**/{*.ps1,ocr-worker.cjs}', unpackDir: '{node_modules,app/data/ocr}' },
   icon: resolve('app/assets/app-icon.ico'),
   ...(existsSync(resolve(`.cache/electron/electron-v45.3.3-${platform}-${arch}.zip`)) ? { electronZipDir: resolve('.cache/electron') } : {}),
-  ignore: [/^\/release($|\/)/, /^\/data($|\/)/, /^\/tests($|\/)/, /^\/scripts($|\/)/, /^\/design-qa\.md$/, /^\/artifacts($|\/)/, /^\/\.git($|\/)/, /^\/\.cache($|\/)/],
+  ignore: [/^\/release($|\/)/, /^\/data($|\/)/, /^\/tests($|\/)/, /^\/scripts($|\/)/, /^\/design-qa\.md$/, /^\/artifacts($|\/)/, /^\/\.git(hub)?($|\/)/, /^\/\.cache($|\/)/],
   prune: true,
+  afterCopy: [async ({buildPath}) => {
+    const appRoot = join(buildPath,'app');
+    const file = join(appRoot,'data/bundled-snapshot.json');
+    const {revision} = JSON.parse(await readFile(file,'utf8'));
+    const {manifest} = await buildDataPackage(appRoot,revision);
+    await writeFile(file,JSON.stringify(manifest,null,2)+'\n');
+  }],
 });
 const { version } = JSON.parse(await readFile(resolve('package.json'), 'utf8'));
 for (const directory of apps) {
@@ -39,7 +47,7 @@ for (const directory of apps) {
     '短暂漏读最多显示 1.5 秒灰色待复核结果，期间不能用快捷键记录；候选消失后可在「已选海克斯」手动补录。',
     '快捷键只记录助手状态，不会点击卡片、购买装备或向游戏发送按键。切出游戏时暂停画面识别并隐藏标签。',
     '当前为测试版：已通过逻辑、界面、离线 OCR 图片与包内资源检查；Windows 游戏实机截图、识别准确率和叠层兼容性仍待验收。',
-    '机制适配分不是胜率。英雄、海克斯和装备统计为 26.22 / 常规海克斯大乱斗 / 全体样本，截至 2026-11-15 17:00（北京时间），不会自动联网更新。',
+    '英雄、海克斯、装备、攻略和图标可独立更新。在「设置与数据」检查更新；默认每 6 小时检查，下载后下次启动自动生效，停止识别后也可立即应用。断网时使用本机快照。',
     'pp 表示该英雄持有海克斯胜率与英雄基准胜率之差，不是因果提升。S 等级由本工具按同阶排名分位计算，缺数据时不编造胜率。',
     '装备样本只覆盖标明的前三件核心，海克斯调整及其余装备属于规则参考；不代表六件套胜率，也不保证收益最大化。',
     '统计数据采用 CC BY-NC 4.0，仅限非商业使用；详情见 THIRD_PARTY_NOTICES.md。',

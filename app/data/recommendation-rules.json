@@ -1,0 +1,1792 @@
+{
+  "schema": 1,
+  "champions": {
+    "archetypes": {
+      "marksman": {
+        "attack": 1,
+        "spell": 0.35,
+        "ad": 1,
+        "ap": 0.08,
+        "crit": 0.9,
+        "onhit": 0.85,
+        "haste": 0.35,
+        "health": 0.18,
+        "resist": 0.2,
+        "heal": 0.4,
+        "shield": 0.2,
+        "range": 0.9,
+        "ult": 0.5,
+        "speed": 0.8
+      },
+      "onhit": {
+        "attack": 1,
+        "spell": 0.5,
+        "ad": 0.8,
+        "ap": 0.15,
+        "crit": 0.45,
+        "onhit": 1,
+        "haste": 0.4,
+        "health": 0.25,
+        "resist": 0.3,
+        "heal": 0.5,
+        "range": 0.8,
+        "ult": 0.5,
+        "speed": 0.8
+      },
+      "mage": {
+        "attack": 0.15,
+        "spell": 1,
+        "ad": 0.04,
+        "ap": 1,
+        "crit": 0.05,
+        "onhit": 0.1,
+        "haste": 0.9,
+        "health": 0.3,
+        "resist": 0.25,
+        "heal": 0.15,
+        "shield": 0.25,
+        "range": 0.85,
+        "ult": 0.7,
+        "speed": 0.45
+      },
+      "burn": {
+        "attack": 0.15,
+        "spell": 1,
+        "ad": 0.04,
+        "ap": 1,
+        "crit": 0.05,
+        "onhit": 0.1,
+        "haste": 0.75,
+        "health": 0.5,
+        "resist": 0.4,
+        "heal": 0.4,
+        "shield": 0.2,
+        "range": 0.6,
+        "ult": 0.75,
+        "dot": 1,
+        "speed": 0.5
+      },
+      "fighter": {
+        "attack": 0.8,
+        "spell": 0.7,
+        "ad": 1,
+        "ap": 0.08,
+        "crit": 0.2,
+        "onhit": 0.65,
+        "haste": 0.75,
+        "health": 0.85,
+        "resist": 0.7,
+        "heal": 0.8,
+        "shield": 0.45,
+        "range": 0.1,
+        "ult": 0.65,
+        "speed": 0.7,
+        "snowball": 0.8
+      },
+      "assassin": {
+        "attack": 0.5,
+        "spell": 0.9,
+        "ad": 1,
+        "ap": 0.05,
+        "crit": 0.25,
+        "onhit": 0.35,
+        "haste": 0.8,
+        "health": 0.3,
+        "resist": 0.3,
+        "heal": 0.35,
+        "range": 0.25,
+        "ult": 0.8,
+        "speed": 0.8,
+        "snowball": 0.65
+      },
+      "apAssassin": {
+        "attack": 0.45,
+        "spell": 1,
+        "ad": 0.05,
+        "ap": 1,
+        "crit": 0.08,
+        "onhit": 0.45,
+        "haste": 0.8,
+        "health": 0.4,
+        "resist": 0.35,
+        "heal": 0.4,
+        "range": 0.2,
+        "ult": 0.8,
+        "speed": 0.75,
+        "snowball": 0.7
+      },
+      "tank": {
+        "attack": 0.4,
+        "spell": 0.45,
+        "ad": 0.25,
+        "ap": 0.25,
+        "crit": 0.04,
+        "onhit": 0.3,
+        "haste": 0.65,
+        "health": 1,
+        "resist": 1,
+        "heal": 0.7,
+        "shield": 0.7,
+        "range": 0.05,
+        "ult": 0.8,
+        "speed": 0.55,
+        "snowball": 1
+      },
+      "support": {
+        "attack": 0.25,
+        "spell": 0.5,
+        "ad": 0.1,
+        "ap": 0.65,
+        "crit": 0.05,
+        "onhit": 0.15,
+        "haste": 1,
+        "health": 0.45,
+        "resist": 0.4,
+        "heal": 1,
+        "shield": 1,
+        "ally": 1,
+        "range": 0.55,
+        "ult": 0.7,
+        "speed": 0.6
+      }
+    },
+    "groups": {
+      "marksman": "Aphelios Ashe Caitlyn Draven Jhin Jinx Kindred Lucian MissFortune Nilah Samira Sivir Tristana Xayah Zeri Ezreal Smolder Corki Yasuo Yone Tryndamere",
+      "onhit": "Akshan Kaisa Kalista Kayle KogMaw MasterYi Twitch Varus Vayne",
+      "mage": "Ahri Annie Anivia AurelionSol Aurora Azir Cassiopeia Hwei Karthus Kennen Leblanc Lissandra Lux Mel Neeko Orianna Ryze Syndra TwistedFate Veigar Velkoz Vex Viktor Xerath Ziggs Zoe",
+      "burn": "Brand Fiddlesticks Heimerdinger Lillia Malzahar Morgana Rumble Singed Swain Zyra Gwen Mordekaiser Teemo",
+      "fighter": "Aatrox Ambessa Belveth Briar Camille Darius Fiora Gangplank Garen Gnar Hecarim Illaoi Irelia Jax Jayce Kled KSante LeeSin MonkeyKing Nasus Olaf Pantheon RekSai Renekton Rengar Riven Sett Shyvana Skarner Trundle Udyr Urgot Vi Viego Volibear Warwick XinZhao Yorick Zaahen",
+      "assassin": "Khazix Naafiri Nocturne Pyke Qiyana Shaco Talon Zed",
+      "apAssassin": "Akali Diana Ekko Elise Evelynn Fizz Kassadin Katarina Nidalee Sylas Vladimir",
+      "tank": "Alistar Amumu Blitzcrank Braum Chogath Galio Gragas Leona Malphite Maokai Nautilus Nunu Ornn Poppy Rammus Rell Sejuani Shen Sion TahmKench Taric Thresh Zac DrMundo",
+      "support": "Bard Ivern Janna Karma Lulu Milio Nami Rakan Renata Senna Seraphine Sona Soraka Yuumi Zilean"
+    },
+    "traits": {
+      "pets": "Annie Aphelios Azir Elise Heimerdinger Ivern Malzahar Naafiri Shaco Yorick Zyra",
+      "stack": "AurelionSol Bard Chogath Kindred Nasus Senna Shyvana Sion Smolder Swain Thresh Veigar",
+      "spin": "Darius Garen Katarina MonkeyKing Samira Tryndamere",
+      "dot": "Brand Cassiopeia Darius Fiddlesticks Karthus Lillia Malzahar Morgana Rumble Singed Swain Teemo Twitch Udyr Zyra",
+      "ally": "Alistar Annie Bard Braum Hwei Ivern Janna Karma Kayle LeeSin Lulu Lux Milio Morgana Nami Nidalee Orianna Rakan Renata Senna Seraphine Shen Sona Soraka Taric Thresh Yuumi Zilean"
+    },
+    "noDashes": [
+      "Anivia",
+      "Aphelios",
+      "Ashe",
+      "Brand",
+      "Caitlyn",
+      "Cassiopeia",
+      "Chogath",
+      "Darius",
+      "Draven",
+      "DrMundo",
+      "Fiddlesticks",
+      "Gangplank",
+      "Garen",
+      "Heimerdinger",
+      "Hwei",
+      "Illaoi",
+      "Janna",
+      "Jhin",
+      "Jinx",
+      "Karthus",
+      "KogMaw",
+      "Kled",
+      "Lillia",
+      "Lulu",
+      "Lux",
+      "Malzahar",
+      "Mel",
+      "Milio",
+      "MissFortune",
+      "Mordekaiser",
+      "Morgana",
+      "Nami",
+      "Nasus",
+      "Neeko",
+      "Olaf",
+      "Orianna",
+      "Renata",
+      "Rumble",
+      "Ryze",
+      "Senna",
+      "Seraphine",
+      "Sett",
+      "Shaco",
+      "Singed",
+      "Sion",
+      "Sivir",
+      "Smolder",
+      "Sona",
+      "Soraka",
+      "Swain",
+      "Syndra",
+      "TahmKench",
+      "Taliyah",
+      "Taric",
+      "Teemo",
+      "Thresh",
+      "Trundle",
+      "Twitch",
+      "Udyr",
+      "Urgot",
+      "Varus",
+      "Veigar",
+      "Velkoz",
+      "Viktor",
+      "Vladimir",
+      "Volibear",
+      "Xerath",
+      "Yorick",
+      "Zeri",
+      "Ziggs",
+      "Zilean",
+      "Zyra"
+    ],
+    "aliases": {
+      "Jinx": "金克斯 暴走萝莉 萝莉 jks",
+      "Ashe": "寒冰 艾希 ax",
+      "MissFortune": "女枪 好运姐 厄运小姐 mf",
+      "MasterYi": "剑圣 易 js",
+      "Yasuo": "亚索 快乐风男 ys",
+      "Yone": "永恩 yone ye",
+      "Malphite": "石头人 石头 st",
+      "Garen": "盖伦 德玛 德玛西亚 gl",
+      "Teemo": "提莫 tm",
+      "DrMundo": "蒙多 md",
+      "MonkeyKing": "猴子 孙悟空 悟空 hz",
+      "KogMaw": "大嘴 克格莫 dz",
+      "Khazix": "螳螂 卡兹克 tl",
+      "Chogath": "大虫子 科加斯",
+      "Blitzcrank": "机器人 jqr",
+      "Hecarim": "人马 赫卡里姆",
+      "Aatrox": "剑魔 亚托克斯",
+      "Darius": "诺手 诺克萨斯之手",
+      "Tryndamere": "蛮王",
+      "TahmKench": "塔姆 蛤蟆",
+      "Orianna": "发条",
+      "Twitch": "老鼠",
+      "Leona": "日女 曙光",
+      "Diana": "皎月",
+      "Ezreal": "ez 伊泽瑞尔 探险家",
+      "Lucian": "卢锡安 奥巴马",
+      "Caitlyn": "女警",
+      "Vayne": "vn 薇恩",
+      "Kaisa": "卡莎",
+      "Tristana": "小炮",
+      "Lux": "光辉 拉克丝",
+      "Leblanc": "妖姬",
+      "Annie": "安妮 火女",
+      "Brand": "火男 布兰德",
+      "Veigar": "小法 维迦",
+      "Malzahar": "蚂蚱",
+      "Vladimir": "吸血鬼",
+      "Swain": "乌鸦 斯维因",
+      "Singed": "炼金 辛吉德",
+      "Fiddlesticks": "稻草人",
+      "Lillia": "莉莉娅 小鹿",
+      "Sona": "琴女",
+      "Soraka": "奶妈 星妈",
+      "Nami": "娜美 鱼人",
+      "Fizz": "小鱼人",
+      "Zed": "劫",
+      "Riven": "锐雯 瑞文",
+      "Rengar": "狮子狗",
+      "Warwick": "狼人",
+      "Rammus": "龙龟",
+      "Thresh": "锤石",
+      "Nasus": "狗头",
+      "Renekton": "鳄鱼",
+      "AurelionSol": "龙王",
+      "Smolder": "斯莫德 小火龙",
+      "KSante": "奎桑提 黑哥",
+      "Nidalee": "豹女"
+    },
+    "overrides": {
+      "Caitlyn": {
+        "dash": 0.65
+      },
+      "Kled": {
+        "dash": 0.65
+      },
+      "Shaco": {
+        "dash": 0.65
+      },
+      "TahmKench": {
+        "dash": 0.65
+      },
+      "Urgot": {
+        "dash": 0.65
+      },
+      "Zeri": {
+        "dash": 0.65
+      },
+      "Ziggs": {
+        "dash": 0.65
+      },
+      "Fiddlesticks": {
+        "dash": 0.35
+      },
+      "Sion": {
+        "dash": 0.35
+      },
+      "Volibear": {
+        "dash": 0.35
+      },
+      "Jhin": {
+        "onhit": 0.2,
+        "attack": 0.55,
+        "crit": 1,
+        "spell": 0.7
+      },
+      "Ezreal": {
+        "spell": 1,
+        "haste": 1,
+        "crit": 0.1,
+        "spellblade": 1,
+        "dash": 0.65,
+        "ap": 0.3
+      },
+      "Smolder": {
+        "spell": 1,
+        "haste": 0.8,
+        "crit": 0.65,
+        "attack": 0.6
+      },
+      "Yasuo": {
+        "crit": 1,
+        "attack": 1
+      },
+      "Yone": {
+        "crit": 1,
+        "attack": 1
+      },
+      "Tryndamere": {
+        "crit": 1,
+        "attack": 1
+      },
+      "DrMundo": {
+        "health": 1,
+        "heal": 1,
+        "ad": 0.65,
+        "ap": 0.05,
+        "attack": 0.7,
+        "shield": 0.1,
+        "crit": 0.05
+      },
+      "Teemo": {
+        "ap": 1,
+        "attack": 0.75,
+        "onhit": 0.8,
+        "dot": 1
+      },
+      "Kaisa": {
+        "ap": 0.65
+      },
+      "KogMaw": {
+        "ap": 0.65
+      },
+      "Varus": {
+        "ap": 0.65
+      },
+      "Senna": {
+        "ad": 0.9,
+        "attack": 0.8,
+        "crit": 0.6,
+        "onhit": 0.5,
+        "ap": 0.3
+      },
+      "Kayle": {
+        "ap": 1,
+        "attack": 0.95,
+        "onhit": 0.95
+      },
+      "Gwen": {
+        "ap": 1,
+        "attack": 0.95,
+        "onhit": 0.95
+      },
+      "Azir": {
+        "ap": 1,
+        "attack": 0.95,
+        "onhit": 0.95
+      },
+      "Katarina": {
+        "onhit": 0.9,
+        "dash": 1,
+        "dot": 0.2
+      },
+      "Ryze": {
+        "mana": 1
+      },
+      "Kassadin": {
+        "mana": 1
+      },
+      "Cassiopeia": {
+        "mana": 1
+      },
+      "Anivia": {
+        "mana": 1
+      },
+      "Elise": {
+        "ult": 0.1
+      },
+      "Nidalee": {
+        "ult": 0.1
+      },
+      "Jayce": {
+        "ult": 0.1
+      },
+      "Udyr": {
+        "ult": 0.1
+      }
+    }
+  },
+  "augments": {
+    "TapDancer": {
+      "tags": [
+        "attack",
+        "onhit",
+        "speed"
+      ],
+      "summary": "普攻叠加移动速度，再由移速转化为攻速。持续输出越久，收益越高。"
+    },
+    "SymphonyofWar": {
+      "tags": [
+        "attack",
+        "ad",
+        "onhit",
+        "heal"
+      ],
+      "summary": "获得致命节奏和征服者，持续普攻提供攻速、适应之力与回复。"
+    },
+    "Deft": {
+      "tags": [
+        "attack",
+        "onhit"
+      ]
+    },
+    "DualWield": {
+      "tags": [
+        "attack",
+        "onhit"
+      ],
+      "summary": "提高总攻速，攻击附带额外箭矢，以削减后的效能触发攻击特效。"
+    },
+    "DoubleTap": {
+      "tags": [
+        "crit",
+        "onhit",
+        "attack"
+      ],
+      "summary": "获得暴击几率；暴击时额外触发一次攻击特效。"
+    },
+    "CriticalRhythm": {
+      "tags": [
+        "crit",
+        "attack"
+      ]
+    },
+    "Firebrand": {
+      "tags": [
+        "attack",
+        "onhit",
+        "dot"
+      ],
+      "summary": "普攻施加可叠加的持续灼烧，适合长时间连续攻击。"
+    },
+    "Typhoon": {
+      "tags": [
+        "attack",
+        "onhit"
+      ]
+    },
+    "LightemUp": {
+      "tags": [
+        "attack",
+        "onhit"
+      ]
+    },
+    "Marksmage": {
+      "tags": [
+        "ap",
+        "attack"
+      ],
+      "summary": "普通攻击附加基于法术强度的物理伤害；需要实际进行普攻。"
+    },
+    "MasterofDuality": {
+      "tags": [
+        "attack",
+        "spell",
+        "ap",
+        "ad"
+      ],
+      "summary": "普攻叠加法强，技能命中叠加攻击力。适合普攻与技能交替输出。"
+    },
+    "EtherealWeapon": {
+      "tags": [
+        "spell",
+        "onhit"
+      ],
+      "summary": "技能命中可以触发攻击特效，同一目标存在触发冷却。",
+      "grants": [
+        "onhit"
+      ]
+    },
+    "MysticPunch": {
+      "tags": [
+        "attack",
+        "haste",
+        "spellblade"
+      ]
+    },
+    "ScopedWeapons": {
+      "tags": [
+        "attack",
+        "range"
+      ]
+    },
+    "ScopierWeapons": {
+      "tags": [
+        "attack",
+        "range"
+      ]
+    },
+    "ScopiestWeapons": {
+      "tags": [
+        "attack",
+        "range"
+      ]
+    },
+    "DrawYourSword": {
+      "tags": [
+        "attack",
+        "ad",
+        "health"
+      ],
+      "requires": "ranged",
+      "warning": "会失去远程普攻优势，必须按近战进场方式调整站位和生存装备。"
+    },
+    "JeweledGauntlet": {
+      "tags": [
+        "spell",
+        "crit"
+      ],
+      "grants": [
+        "spellCrit"
+      ],
+      "summary": "技能伤害可以暴击，并获得暴击几率。优先配合高频或高伤害技能。"
+    },
+    "JeweledBracelet": {
+      "tags": [
+        "spell",
+        "crit"
+      ],
+      "grants": [
+        "spellCrit"
+      ],
+      "warning": "仅强化游戏内标注的那一个技能；当前模型按英雄整体能力估算。"
+    },
+    "Vulnerability": {
+      "tags": [
+        "dot",
+        "crit",
+        "itemhaste"
+      ],
+      "grants": [
+        "dotCrit"
+      ],
+      "summary": "持续伤害和装备效果可以暴击，并获得暴击几率；不会让所有技能都暴击。"
+    },
+    "InfernalConduit": {
+      "tags": [
+        "spell",
+        "dot",
+        "haste"
+      ],
+      "grants": [
+        "burn"
+      ],
+      "summary": "技能施加可叠加灼烧，灼烧效果帮助缩短基础技能冷却。"
+    },
+    "MagicMissile": {
+      "tags": [
+        "spell",
+        "range"
+      ]
+    },
+    "SkilledSniper": {
+      "tags": [
+        "spell",
+        "range",
+        "haste"
+      ]
+    },
+    "PhenomenalEvil": {
+      "tags": [
+        "spell",
+        "ap",
+        "stack"
+      ]
+    },
+    "WitchfulThinking": {
+      "tags": [
+        "ap",
+        "spell"
+      ]
+    },
+    "BluntForce": {
+      "tags": [
+        "ad",
+        "attack"
+      ]
+    },
+    "ItsCritical": {
+      "tags": [
+        "crit"
+      ]
+    },
+    "SoulSiphon": {
+      "tags": [
+        "crit",
+        "heal",
+        "attack"
+      ]
+    },
+    "Recursion": {
+      "tags": [
+        "haste",
+        "spell"
+      ]
+    },
+    "InfiniteRecursion": {
+      "tags": [
+        "haste",
+        "spell",
+        "stack"
+      ]
+    },
+    "BreadAndButter": {
+      "tags": [
+        "haste",
+        "spell"
+      ]
+    },
+    "BreadAndCheese": {
+      "tags": [
+        "haste",
+        "spell"
+      ]
+    },
+    "BreadAndJam": {
+      "tags": [
+        "haste",
+        "spell"
+      ]
+    },
+    "Eureka": {
+      "tags": [
+        "ap",
+        "haste",
+        "spell"
+      ]
+    },
+    "Archmage": {
+      "tags": [
+        "spell",
+        "haste"
+      ]
+    },
+    "WithHaste": {
+      "tags": [
+        "haste",
+        "speed"
+      ]
+    },
+    "DontBlink": {
+      "tags": [
+        "speed"
+      ]
+    },
+    "LegDay": {
+      "tags": [
+        "speed"
+      ]
+    },
+    "OutlawsGrit": {
+      "tags": [
+        "dash",
+        "resist"
+      ],
+      "requires": "dash"
+    },
+    "Dashing": {
+      "tags": [
+        "dash",
+        "haste"
+      ],
+      "requires": "dash"
+    },
+    "Earthwake": {
+      "tags": [
+        "dash",
+        "spell"
+      ],
+      "requires": "dash"
+    },
+    "ShadowRunner": {
+      "tags": [
+        "dash",
+        "speed"
+      ],
+      "requires": "dash"
+    },
+    "SwiftAndSafe": {
+      "tags": [
+        "dash",
+        "shield"
+      ],
+      "requires": "dash"
+    },
+    "CourageoftheColossus": {
+      "tags": [
+        "cc",
+        "shield",
+        "health"
+      ],
+      "requires": "cc"
+    },
+    "Cruelty": {
+      "tags": [
+        "cc",
+        "spell"
+      ],
+      "requires": "cc"
+    },
+    "SlapAround": {
+      "tags": [
+        "cc",
+        "stack"
+      ],
+      "requires": "cc"
+    },
+    "Impassable": {
+      "tags": [
+        "cc",
+        "resist"
+      ],
+      "requires": "cc"
+    },
+    "SoulEater": {
+      "tags": [
+        "cc",
+        "health",
+        "stack"
+      ],
+      "requires": "cc"
+    },
+    "IceCold": {
+      "tags": [
+        "slow"
+      ]
+    },
+    "Goliath": {
+      "tags": [
+        "health",
+        "resist",
+        "ad",
+        "ap"
+      ],
+      "summary": "提升生命值、适应之力和体型。适合能持续留在战场的英雄。"
+    },
+    "CelestialBody": {
+      "tags": [
+        "health",
+        "resist"
+      ],
+      "warning": "会降低造成的伤害；承担主输出时需要权衡。"
+    },
+    "HeavyHitter": {
+      "tags": [
+        "health",
+        "attack",
+        "onhit"
+      ]
+    },
+    "TankEngine": {
+      "tags": [
+        "health",
+        "stack"
+      ]
+    },
+    "ImTheJuggernaut": {
+      "tags": [
+        "health",
+        "resist",
+        "attack",
+        "spell"
+      ]
+    },
+    "DawnbringersResolve": {
+      "tags": [
+        "health",
+        "heal"
+      ]
+    },
+    "Goredrink": {
+      "tags": [
+        "heal",
+        "attack",
+        "spell"
+      ]
+    },
+    "CircleofDeath": {
+      "tags": [
+        "heal",
+        "health"
+      ]
+    },
+    "AllForYou": {
+      "tags": [
+        "ally",
+        "heal",
+        "shield"
+      ],
+      "requires": "ally"
+    },
+    "FirstAidKit": {
+      "tags": [
+        "heal",
+        "shield",
+        "ally"
+      ]
+    },
+    "CriticalHealing": {
+      "tags": [
+        "heal",
+        "shield",
+        "crit"
+      ],
+      "grants": [
+        "healCrit"
+      ]
+    },
+    "SonicBoom": {
+      "tags": [
+        "ally",
+        "heal",
+        "shield"
+      ],
+      "requires": "ally"
+    },
+    "WindspeakersBlessing": {
+      "tags": [
+        "ally",
+        "heal",
+        "shield",
+        "resist"
+      ],
+      "requires": "ally"
+    },
+    "SpiritBomb": {
+      "tags": [
+        "ally",
+        "heal",
+        "shield"
+      ],
+      "requires": "ally"
+    },
+    "EmpoweredByTheFaithful": {
+      "tags": [
+        "ally",
+        "heal",
+        "shield"
+      ],
+      "requires": "ally"
+    },
+    "EmpyreanPromise": {
+      "tags": [
+        "ally",
+        "heal",
+        "shield"
+      ],
+      "requires": "ally"
+    },
+    "ProteinShake": {
+      "tags": [
+        "resist",
+        "heal",
+        "shield",
+        "ally"
+      ]
+    },
+    "BigBrain": {
+      "tags": [
+        "ap",
+        "shield"
+      ]
+    },
+    "MightyShield": {
+      "tags": [
+        "shield"
+      ]
+    },
+    "Overflow": {
+      "tags": [
+        "mana",
+        "spell"
+      ],
+      "requires": "mana",
+      "warning": "法力消耗提高；需要同时解决续航。"
+    },
+    "MindtoMatter": {
+      "tags": [
+        "mana",
+        "health"
+      ],
+      "requires": "mana"
+    },
+    "Juiced": {
+      "tags": [
+        "mana",
+        "attack",
+        "onhit"
+      ],
+      "requires": "mana"
+    },
+    "BlueBarrier": {
+      "tags": [
+        "mana",
+        "shield",
+        "spell"
+      ],
+      "requires": "mana"
+    },
+    "NoManaNoProblem": {
+      "tags": [
+        "spell",
+        "mana"
+      ],
+      "requires": "mana"
+    },
+    "StackosaurusRex": {
+      "tags": [
+        "stack"
+      ],
+      "requires": "stack",
+      "summary": "增加英雄技能获得的永久层数；先确认英雄本身具有对应叠层机制。"
+    },
+    "Minionmancer": {
+      "tags": [
+        "pets"
+      ],
+      "requires": "pets"
+    },
+    "SpinToWin": {
+      "tags": [
+        "spin",
+        "haste"
+      ],
+      "requires": "spin"
+    },
+    "BacktoBasics": {
+      "tags": [
+        "spell",
+        "haste"
+      ],
+      "disablesUltimate": true,
+      "warning": "无法使用终极技能，会使依赖大招触发的海克斯失效。"
+    },
+    "UltimateRevolution": {
+      "tags": [
+        "ult"
+      ],
+      "requires": "ult"
+    },
+    "UltimateAwakening": {
+      "tags": [
+        "ult",
+        "haste"
+      ],
+      "requires": "ult"
+    },
+    "UltimateUnstoppable": {
+      "tags": [
+        "ult",
+        "resist"
+      ],
+      "requires": "ult"
+    },
+    "CantTouchThis": {
+      "tags": [
+        "ult"
+      ],
+      "requires": "ult"
+    },
+    "FinalForm": {
+      "tags": [
+        "ult",
+        "health",
+        "heal"
+      ],
+      "requires": "ult"
+    },
+    "ItsKillingTime": {
+      "tags": [
+        "ult",
+        "spell"
+      ],
+      "requires": "ult"
+    },
+    "StuckInHereWithMe": {
+      "tags": [
+        "ult",
+        "resist",
+        "health"
+      ],
+      "requires": "ult"
+    },
+    "FeyMagic": {
+      "tags": [
+        "ult",
+        "cc"
+      ],
+      "requires": "ult"
+    },
+    "RISE": {
+      "tags": [
+        "ult",
+        "spell"
+      ],
+      "requires": "ult",
+      "summary": "使用被强化的技能完成击杀后可以再次施放；收益依赖击杀条件。"
+    },
+    "UltimateRecursion": {
+      "tags": [
+        "ult",
+        "haste"
+      ],
+      "requires": "ult"
+    },
+    "ApexInventor": {
+      "tags": [
+        "itemhaste"
+      ],
+      "summary": "提升装备急速，适合有冷却时间的装备主动或被动效果；不加快所有持续伤害。"
+    },
+    "Upgrade_IE": {
+      "tags": [
+        "crit",
+        "ad"
+      ],
+      "requiredItems": [
+        "3031"
+      ]
+    },
+    "Upgrade_Collector": {
+      "tags": [
+        "ad",
+        "crit"
+      ],
+      "requiredItems": [
+        "6676"
+      ]
+    },
+    "Upgrade_ZH": {
+      "tags": [
+        "ap",
+        "itemhaste"
+      ],
+      "requiredItems": [
+        "3157"
+      ]
+    },
+    "Upgrade_Immolate": {
+      "tags": [
+        "health",
+        "dot"
+      ],
+      "requiredItems": [
+        "3068",
+        "6664"
+      ],
+      "anyItem": true
+    },
+    "Upgrade_Sheen": {
+      "tags": [
+        "spellblade",
+        "onhit"
+      ],
+      "requiredItems": [
+        "3078",
+        "3100",
+        "6662"
+      ],
+      "anyItem": true
+    },
+    "Upgrade_SwordOfBlossom": {
+      "tags": [
+        "attack",
+        "ally",
+        "heal"
+      ],
+      "requiredItems": [
+        "124011"
+      ]
+    },
+    "Upgrade_SunderedSky": {
+      "tags": [
+        "attack",
+        "health",
+        "heal"
+      ],
+      "requiredItems": [
+        "6610"
+      ]
+    },
+    "Upgrade_Ravenous": {
+      "tags": [
+        "ad",
+        "attack",
+        "heal"
+      ],
+      "requiredItems": [
+        "3074"
+      ]
+    },
+    "Upgrade_DeathDance": {
+      "tags": [
+        "ad",
+        "resist",
+        "heal"
+      ],
+      "requiredItems": [
+        "6333"
+      ]
+    },
+    "Upgrade_Stormsurge": {
+      "tags": [
+        "ap",
+        "spell"
+      ],
+      "requiredItems": [
+        "4646"
+      ]
+    },
+    "Quest_SteelYourHeart": {
+      "tags": [
+        "health",
+        "stack"
+      ],
+      "requiredItems": [
+        "3084"
+      ],
+      "scalingQuest": true,
+      "summary": "持有心之钢并完成叠层任务后获得额外成长。越晚拿到，完成任务的机会越少。"
+    },
+    "Quest_WoogletsWitchcap": {
+      "tags": [
+        "ap",
+        "spell"
+      ],
+      "requiredItems": [
+        "3089",
+        "3157"
+      ],
+      "scalingQuest": true
+    },
+    "Quest_VoidImmolation": {
+      "tags": [
+        "health",
+        "dot",
+        "resist"
+      ],
+      "requiredItems": [
+        "3068",
+        "6664"
+      ],
+      "scalingQuest": true
+    },
+    "Quest_UltraHydra": {
+      "tags": [
+        "ad",
+        "attack",
+        "health"
+      ],
+      "requiredItems": [
+        "3074",
+        "3748",
+        "6698"
+      ],
+      "anyItem": true,
+      "scalingQuest": true
+    },
+    "Quest_UrfsChampion": {
+      "tags": [
+        "economy",
+        "stack"
+      ],
+      "scalingQuest": true
+    },
+    "ADAPt": {
+      "tags": [
+        "ap",
+        "spell"
+      ],
+      "conversion": "ap",
+      "warning": "会将额外攻击力转为法强；不适合仍依赖攻击力收益的方案。"
+    },
+    "escAPADe": {
+      "tags": [
+        "ad",
+        "attack"
+      ],
+      "conversion": "ad",
+      "warning": "会将法强转为额外攻击力；不适合仍依赖法强收益的方案。"
+    },
+    "GlassCannon": {
+      "tags": [
+        "spell",
+        "attack"
+      ],
+      "warning": "降低最大生命值，收益高度依赖安全输出环境。"
+    },
+    "Snowday": {
+      "tags": [
+        "snowball"
+      ]
+    },
+    "BiggestSnowballEver": {
+      "tags": [
+        "snowball",
+        "cc"
+      ]
+    },
+    "GoldenSnowball": {
+      "tags": [
+        "snowball",
+        "resist"
+      ]
+    },
+    "PinballSnowball": {
+      "tags": [
+        "snowball"
+      ]
+    },
+    "SharkTempest": {
+      "tags": [
+        "snowball",
+        "dot"
+      ]
+    },
+    "TransmuteGold": {
+      "tags": [
+        "economy"
+      ],
+      "random": true
+    },
+    "TransmutePrismatic": {
+      "tags": [
+        "economy"
+      ],
+      "random": true
+    },
+    "TransmuteChaos": {
+      "tags": [
+        "economy"
+      ],
+      "random": true
+    },
+    "PandorasBox": {
+      "tags": [
+        "economy"
+      ],
+      "random": true,
+      "warning": "会替换现有组合，无法在随机结果产生前确定收益。"
+    },
+    "Donation": {
+      "tags": [
+        "economy"
+      ]
+    },
+    "Stats": {
+      "tags": [
+        "economy"
+      ]
+    },
+    "StatsOnStats": {
+      "tags": [
+        "economy"
+      ]
+    },
+    "StatsOnStatsOnStats": {
+      "tags": [
+        "economy"
+      ]
+    }
+  },
+  "directPairs": [
+    [
+      "CourageoftheColossus",
+      "CriticalHealing",
+      "定身英雄获得的护盾可以暴击"
+    ],
+    [
+      "CourageoftheColossus",
+      "FirstAidKit",
+      "治疗与护盾强度提高定身英雄时获得的护盾"
+    ],
+    [
+      "CriticalHealing",
+      "FirstAidKit",
+      "治疗与护盾强度也会提高可暴击的治疗和护盾量"
+    ],
+    [
+      "CriticalHealing",
+      "ProteinShake",
+      "额外双抗提供治疗与护盾强度，可放大暴击的治疗和护盾"
+    ],
+    [
+      "Firebrand",
+      "Vulnerability",
+      "普攻叠加的灼烧可以暴击"
+    ],
+    [
+      "InfernalConduit",
+      "Vulnerability",
+      "技能叠加的灼烧可以暴击"
+    ],
+    [
+      "JeweledGauntlet",
+      "Vulnerability",
+      "技能与装备灼烧都能利用两枚符文提供的暴击率"
+    ],
+    [
+      "Goliath",
+      "HeavyHitter",
+      "提高生命上限会增加每次普攻的附加伤害"
+    ],
+    [
+      "TankEngine",
+      "HeavyHitter",
+      "击杀参与叠出的最大生命值会增加普攻附伤"
+    ],
+    [
+      "DawnbringersResolve",
+      "Goliath",
+      "生命上限越高，低血量时触发的回复越多"
+    ],
+    [
+      "CriticalRhythm",
+      "ItsCritical",
+      "提高普攻暴击率，有助于更快叠起攻速"
+    ],
+    [
+      "DoubleTap",
+      "ItsCritical",
+      "提高暴击率，普攻更容易额外触发攻击特效"
+    ]
+  ],
+  "synergies": [
+    [
+      "spellCrit",
+      "crit",
+      10,
+      "技能已经能暴击，新增暴击收益可以作用到技能上"
+    ],
+    [
+      "dotCrit",
+      "dot",
+      11,
+      "持续伤害可以暴击，强化持续伤害的收益更高"
+    ],
+    [
+      "dotCrit",
+      "crit",
+      9,
+      "暴击收益可以强化已有的持续伤害效果"
+    ],
+    [
+      "healCrit",
+      "crit",
+      8,
+      "已有治疗暴击机制，新增暴击能力可强化回复"
+    ],
+    [
+      "onhit",
+      "onhit",
+      9,
+      "已有技能触发攻击特效的机制，可放大攻击特效收益"
+    ],
+    [
+      "burn",
+      "dot",
+      10,
+      "灼烧与持续伤害形成同一输出方向"
+    ]
+  ],
+  "builds": [
+    {
+      "id": "crit",
+      "name": "暴击持续输出",
+      "type": "marksman",
+      "tags": [
+        "attack",
+        "crit",
+        "ad"
+      ],
+      "ids": [
+        "3032",
+        "3006",
+        "3031",
+        "3085",
+        "3036",
+        "3072"
+      ],
+      "note": "先建立攻击力与攻速，再补暴击伤害和穿透。"
+    },
+    {
+      "id": "onhit",
+      "name": "攻速特效流",
+      "type": "onhit",
+      "tags": [
+        "attack",
+        "onhit"
+      ],
+      "ids": [
+        "3153",
+        "3006",
+        "3124",
+        "3085",
+        "3302",
+        "3072"
+      ],
+      "note": "用攻速重复触发装备特效，对持续普攻环境要求较高。"
+    },
+    {
+      "id": "apAttack",
+      "name": "法强普攻流",
+      "type": "onhit",
+      "tags": [
+        "ap",
+        "attack",
+        "onhit"
+      ],
+      "ids": [
+        "3115",
+        "3006",
+        "3124",
+        "3089",
+        "3135",
+        "3157"
+      ],
+      "note": "同时利用法强与攻击特效，适合技能和普攻都有法强收益的英雄。"
+    },
+    {
+      "id": "adCaster",
+      "name": "技能衔接普攻",
+      "type": "marksman",
+      "tags": [
+        "ad",
+        "haste",
+        "spellblade"
+      ],
+      "ids": [
+        "3078",
+        "3158",
+        "3004",
+        "3161",
+        "3036",
+        "3072"
+      ],
+      "note": "通过技能急速与咒刃衔接普攻；魔宗需要提前叠层。"
+    },
+    {
+      "id": "mage",
+      "name": "法术爆发流",
+      "type": "mage",
+      "tags": [
+        "ap",
+        "spell",
+        "range"
+      ],
+      "ids": [
+        "6655",
+        "3020",
+        "4645",
+        "3089",
+        "3135",
+        "3157"
+      ],
+      "note": "先解决法力与技能输出，再补法强和法术穿透。"
+    },
+    {
+      "id": "burn",
+      "name": "持续灼烧流",
+      "type": "burn",
+      "tags": [
+        "ap",
+        "spell",
+        "dot"
+      ],
+      "ids": [
+        "2503",
+        "3020",
+        "6653",
+        "3116",
+        "3135",
+        "3089"
+      ],
+      "note": "保持技能覆盖和持续灼烧，敌方前排较多时价值更高。"
+    },
+    {
+      "id": "fighter",
+      "name": "战士持续作战",
+      "type": "fighter",
+      "tags": [
+        "ad",
+        "health",
+        "heal",
+        "haste"
+      ],
+      "ids": [
+        "6610",
+        "3047",
+        "3071",
+        "3053",
+        "6333",
+        "3065"
+      ],
+      "note": "用生命值、回复和抗性延长输出时间。"
+    },
+    {
+      "id": "spellblade",
+      "name": "咒刃战士流",
+      "type": "fighter",
+      "tags": [
+        "ad",
+        "spellblade",
+        "attack",
+        "health"
+      ],
+      "ids": [
+        "3078",
+        "3047",
+        "6610",
+        "3053",
+        "6333",
+        "3065"
+      ],
+      "note": "技能与普攻交替，持续触发咒刃与回复效果。"
+    },
+    {
+      "id": "apFighter",
+      "name": "法系持续作战",
+      "type": "burn",
+      "tags": [
+        "ap",
+        "spell",
+        "health",
+        "heal"
+      ],
+      "ids": [
+        "6653",
+        "3047",
+        "4633",
+        "3116",
+        "3157",
+        "3065"
+      ],
+      "note": "在生命值与法强之间平衡，适合近距离持续交战。"
+    },
+    {
+      "id": "tank",
+      "name": "前排承伤流",
+      "type": "tank",
+      "tags": [
+        "health",
+        "resist",
+        "cc"
+      ],
+      "ids": [
+        "3084",
+        "3047",
+        "3068",
+        "2502",
+        "3065",
+        "3083"
+      ],
+      "note": "优先保证能活着进场，再通过生命值和装备效果贡献伤害。"
+    },
+    {
+      "id": "support",
+      "name": "治疗保护流",
+      "type": "support",
+      "tags": [
+        "ally",
+        "heal",
+        "shield",
+        "haste"
+      ],
+      "ids": [
+        "6617",
+        "3158",
+        "6620",
+        "3504",
+        "3107",
+        "6621"
+      ],
+      "note": "提高治疗与护盾频率，给队伍核心持续创造输出空间。"
+    },
+    {
+      "id": "assassin",
+      "name": "物理爆发流",
+      "type": "assassin",
+      "tags": [
+        "ad",
+        "spell",
+        "dash"
+      ],
+      "ids": [
+        "3142",
+        "3158",
+        "6696",
+        "6694",
+        "3814",
+        "6699"
+      ],
+      "note": "以穿甲和技能爆发寻找击杀窗口，避免承担长时间正面承伤。"
+    },
+    {
+      "id": "apAssassin",
+      "name": "法系突进流",
+      "type": "apAssassin",
+      "tags": [
+        "ap",
+        "spell",
+        "dash"
+      ],
+      "ids": [
+        "3100",
+        "3020",
+        "4646",
+        "3089",
+        "3135",
+        "3157"
+      ],
+      "note": "利用法强与进场爆发，保留中娅作为容错。"
+    }
+  ],
+  "specialBuilds": {
+    "spellCrit": {
+      "id": "spellCrit",
+      "name": "技能暴击流",
+      "type": "mage",
+      "tags": [
+        "ap",
+        "spell",
+        "crit"
+      ],
+      "ids": [
+        "6655",
+        "3020",
+        "3089",
+        "3031",
+        "3135",
+        "3157"
+      ],
+      "note": "技能可暴击后，把无尽作为可选的暴击增幅；仍保留法强与法穿基础。"
+    },
+    "dotCrit": {
+      "id": "dotCrit",
+      "name": "灼烧暴击流",
+      "type": "burn",
+      "tags": [
+        "ap",
+        "dot",
+        "crit"
+      ],
+      "ids": [
+        "2503",
+        "3020",
+        "6653",
+        "3031",
+        "3135",
+        "3089"
+      ],
+      "note": "易损让持续伤害和装备效果可以暴击，围绕灼烧与暴击增幅组织装备。"
+    },
+    "spellOnhit": {
+      "id": "spellOnhit",
+      "name": "技能触发特效",
+      "type": "mage",
+      "tags": [
+        "ap",
+        "spell",
+        "onhit"
+      ],
+      "ids": [
+        "3115",
+        "3020",
+        "3100",
+        "3089",
+        "3135",
+        "3157"
+      ],
+      "note": "虚幻武器让技能触发攻击特效，纳什之牙可通过技能兑现收益。仍需留意每目标触发冷却。"
+    },
+    "mana": {
+      "id": "mana",
+      "name": "法力成长流",
+      "type": "mage",
+      "tags": [
+        "mana",
+        "ap",
+        "spell"
+      ],
+      "ids": [
+        "3003",
+        "3020",
+        "6657",
+        "3089",
+        "3135",
+        "3157"
+      ],
+      "note": "用法力装备兑现海克斯的法力收益；女神泪与时光之杖需要成长时间。"
+    }
+  },
+  "exclusiveItems": [
+    [
+      "3036",
+      "3033",
+      "6694",
+      "3071"
+    ],
+    [
+      "3135",
+      "3137"
+    ],
+    [
+      "3053",
+      "3156",
+      "6673"
+    ],
+    [
+      "3078",
+      "3100",
+      "6662",
+      "2510",
+      "3508"
+    ],
+    [
+      "3003",
+      "3004",
+      "3119"
+    ],
+    [
+      "3074",
+      "3748",
+      "6698",
+      "6631"
+    ]
+  ]
+}

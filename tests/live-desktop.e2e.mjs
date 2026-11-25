@@ -1,5 +1,6 @@
 // Real Electron renderer/preload/controller with a simulated capture IPC source.
 // This verifies UI integration; it does not validate Windows pixels or OCR accuracy.
+import {manualDataProfile} from './fixtures/manual-data-profile.mjs';
 import { _electron as electron } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, rm } from 'node:fs/promises';
@@ -15,7 +16,7 @@ const db = indexCatalog(JSON.parse(await readFile(resolve(root, 'app/data/catalo
 db.augmentStats = JSON.parse(await readFile(resolve(root, 'app/data/augment-stats.json'), 'utf8'));
 db.itemStats = JSON.parse(await readFile(resolve(root, 'app/data/item-stats.json'), 'utf8'));
 const app = await electron.launch({ args: ['.'], cwd: root,
-  env: { ...process.env, HEX_COMPANION_TEST_USER_DATA: join(temp, 'profile') }, timeout: 30000 });
+  env: { ...process.env, HEX_COMPANION_TEST_USER_DATA: await manualDataProfile(join(temp, 'profile')) }, timeout: 30000 });
 const page = await app.firstWindow();
 page.setDefaultTimeout(10000);
 const errors = [];
@@ -58,7 +59,7 @@ try {
   await app.evaluate(({ ipcMain }) => {
     globalThis.__liveE2e = { overlays: [], starts: [], stops: 0, resolveStart: null, overlayEnabled: true };
     const handlers = {
-      'window:info': () => ({ platform: 'win32', version: '0.6.1', pinned: false }),
+      'window:info': () => ({ platform: 'win32', version: '0.7.0', pinned: false }),
       'select:enabled': (_event, enabled) => ({enabled, status:enabled?'等待选人客户端处于前台':'已关闭选人提示'}),
       'capture:windows': () => [
         { id: '99', title: 'Notes', processName: 'notepad', width: 1000, height: 700, isGame: false },
@@ -216,6 +217,13 @@ try {
   }), 'equipment navigation scrolls the recommendation into view');
   console.log('PASS: reroll withdraws stale scores immediately, hotkey records physical slot and updates build');
 
+  await action('page', '[data-page="settings"]').first().click();
+  const dataStatus = await page.evaluate(async () => (await window.desktop.loadData()).status);
+  await app.evaluate(({BrowserWindow}, s) => {
+    BrowserWindow.getAllWindows()[0].webContents.send('data:status', {...s, phase:'ready', pending:{...s.active,revision:s.active.revision+1}});
+  }, dataStatus);
+  await action('apply-data').waitFor();
+  assert.ok(await action('apply-data').isDisabled(), 'a staged update cannot interrupt capture');
   await action('page', '[data-page="live"]').first().click();
   await action('live-stop').click();
   await action('live-start').waitFor();

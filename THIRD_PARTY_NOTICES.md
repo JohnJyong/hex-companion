@@ -83,6 +83,10 @@ The model ships with the application and is read locally; no first-run model dow
 or Windows OCR language component is required. These OCR licenses are separate from
 the non-commercial statistics license below.
 
+## Independently published data
+
+Starting with 0.7.0 the [data-v1 channel](https://github.com/JohnJyong/hex-companion/tree/data-v1) distributes the catalog, PNG artwork, statistics, original recommendation rules and attributed guide indexes separately. The bundled snapshot described below remains available offline. Each online statistics table retains its license, source tag, file hashes, game patch, sample count and cutoff. The first 26.23 release adapts [data-v20](https://github.com/czgreat/aramhex-data/tree/data-v20/patches/16.23/normal), covering 4,991,976 valid matches through 2026-11-20 08:00 UTC+08:00. The same source restrictions and attribution obligations apply to downloaded copies.
+
 ## AramHex statistics — CC BY-NC 4.0
 
 `app/data/champion-stats.json` contains the unchanged hero-statistics rows from

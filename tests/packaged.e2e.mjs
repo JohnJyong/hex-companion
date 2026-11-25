@@ -1,5 +1,6 @@
 // Loads the Windows package's platform-neutral application resources with the
 // local Electron runtime. It does not execute or validate the Windows EXE.
+import {manualDataProfile} from './fixtures/manual-data-profile.mjs';
 import { _electron as electron } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdtemp, rm, readFile, access } from 'node:fs/promises';
@@ -38,7 +39,7 @@ for (const name of ['champion-stats', 'augment-stats', 'item-stats']) {
 assert.equal(digest(await readFile(join(unpacked, 'desktop/recognize.ps1'))), digest(await readFile(join(root, 'desktop/recognize.ps1'))));
 await access(join(unpacked, 'desktop/ocr-worker.cjs'));
 const guide = await readFile(resolve(root, 'release/HexCompanion-win32-x64/使用说明.txt'), 'utf8');
-for (const expected of [version, '备选席', '选人提示', 'Ctrl+Alt+H', 'F8', '三个穿透标签', '右上角', '联动理由', '游戏在前台', '不会自动联网更新']) assert.ok(guide.includes(expected), `usage guide includes ${expected}`);
+for (const expected of [version, '备选席', '选人提示', 'Ctrl+Alt+H', 'F8', '三个穿透标签', '右上角', '联动理由', '游戏在前台', '每 6 小时检查']) assert.ok(guide.includes(expected), `usage guide includes ${expected}`);
 await access(join(unpacked, 'node_modules/tesseract.js/src/worker-script/node/index.js'));
 for (const model of packagedJson('app/data/ocr/manifest.json').files) {
   const bytes = await readFile(join(unpacked, 'app/data/ocr', model.file));
@@ -46,7 +47,7 @@ for (const model of packagedJson('app/data/ocr/manifest.json').files) {
   assert.equal(digest(bytes), model.sha256, 'packaged OCR model matches the pinned official asset');
 }
 const temp = await mkdtemp(join(tmpdir(), 'hex-windows-resources-'));
-const app = await electron.launch({ args: [archive], env: { ...process.env, HEX_COMPANION_TEST_USER_DATA: join(temp,'profile') }, timeout:30000 });
+const app = await electron.launch({ args: [archive], env: { ...process.env, HEX_COMPANION_TEST_USER_DATA: await manualDataProfile(join(temp,'profile')) }, timeout:30000 });
 try {
   const page = await app.firstWindow();
   const errors = [];

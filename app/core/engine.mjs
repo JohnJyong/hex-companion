@@ -1,3 +1,4 @@
+import { advice } from './recommendation-data.mjs';
 import { championProfile, FEATURE_NAMES } from './profiles.mjs';
 import { augmentRule, directPairReason, shortId } from './augment-rules.mjs';
 import { lookupAugmentStats } from './augment-stats.mjs';
@@ -37,14 +38,6 @@ function effectiveProfile(champion, selected, state) {
   return p;
 }
 
-const pairRules = [
-  ['spellCrit', 'crit', 10, '技能已经能暴击，新增暴击收益可以作用到技能上'],
-  ['dotCrit', 'dot', 11, '持续伤害可以暴击，强化持续伤害的收益更高'],
-  ['dotCrit', 'crit', 9, '暴击收益可以强化已有的持续伤害效果'],
-  ['healCrit', 'crit', 8, '已有治疗暴击机制，新增暴击能力可强化回复'],
-  ['onhit', 'onhit', 9, '已有技能触发攻击特效的机制，可放大攻击特效收益'],
-  ['burn', 'dot', 10, '灼烧与持续伤害形成同一输出方向'],
-];
 
 export function synergyBetween(a, b) {
   const ra = augmentRule(a), rb = augmentRule(b);
@@ -55,7 +48,7 @@ export function synergyBetween(a, b) {
   if (direct) return { value: 18, reasons: [direct], conflict: false, kind: 'direct' };
   let value = 0;
   const reasons = [];
-  for (const [from, to, bonus, text] of pairRules) {
+  for (const [from, to, bonus, text] of advice.synergies) {
     if ((ra.grants?.includes(from) && rb.tags.includes(to)) || (rb.grants?.includes(from) && ra.tags.includes(to))) { value += bonus; reasons.push(text); }
   }
   const shared = same(ra.tags, rb.tags).filter(x => !['economy', 'stack'].includes(x));
@@ -182,30 +175,11 @@ export function rankCandidates(state, db) {
   }).sort((a, b) => b.decisionScore - a.decisionScore);
 }
 
-const BUILDS = [
-  { id: 'crit', name: '暴击持续输出', type: 'marksman', tags: ['attack', 'crit', 'ad'], ids: ['3032', '3006', '3031', '3085', '3036', '3072'], note: '先建立攻击力与攻速，再补暴击伤害和穿透。' },
-  { id: 'onhit', name: '攻速特效流', type: 'onhit', tags: ['attack', 'onhit'], ids: ['3153', '3006', '3124', '3085', '3302', '3072'], note: '用攻速重复触发装备特效，对持续普攻环境要求较高。' },
-  { id: 'apAttack', name: '法强普攻流', type: 'onhit', tags: ['ap', 'attack', 'onhit'], ids: ['3115', '3006', '3124', '3089', '3135', '3157'], note: '同时利用法强与攻击特效，适合技能和普攻都有法强收益的英雄。' },
-  { id: 'adCaster', name: '技能衔接普攻', type: 'marksman', tags: ['ad', 'haste', 'spellblade'], ids: ['3078', '3158', '3004', '3161', '3036', '3072'], note: '通过技能急速与咒刃衔接普攻；魔宗需要提前叠层。' },
-  { id: 'mage', name: '法术爆发流', type: 'mage', tags: ['ap', 'spell', 'range'], ids: ['6655', '3020', '4645', '3089', '3135', '3157'], note: '先解决法力与技能输出，再补法强和法术穿透。' },
-  { id: 'burn', name: '持续灼烧流', type: 'burn', tags: ['ap', 'spell', 'dot'], ids: ['2503', '3020', '6653', '3116', '3135', '3089'], note: '保持技能覆盖和持续灼烧，敌方前排较多时价值更高。' },
-  { id: 'fighter', name: '战士持续作战', type: 'fighter', tags: ['ad', 'health', 'heal', 'haste'], ids: ['6610', '3047', '3071', '3053', '6333', '3065'], note: '用生命值、回复和抗性延长输出时间。' },
-  { id: 'spellblade', name: '咒刃战士流', type: 'fighter', tags: ['ad', 'spellblade', 'attack', 'health'], ids: ['3078', '3047', '6610', '3053', '6333', '3065'], note: '技能与普攻交替，持续触发咒刃与回复效果。' },
-  { id: 'apFighter', name: '法系持续作战', type: 'burn', tags: ['ap', 'spell', 'health', 'heal'], ids: ['6653', '3047', '4633', '3116', '3157', '3065'], note: '在生命值与法强之间平衡，适合近距离持续交战。' },
-  { id: 'tank', name: '前排承伤流', type: 'tank', tags: ['health', 'resist', 'cc'], ids: ['3084', '3047', '3068', '2502', '3065', '3083'], note: '优先保证能活着进场，再通过生命值和装备效果贡献伤害。' },
-  { id: 'support', name: '治疗保护流', type: 'support', tags: ['ally', 'heal', 'shield', 'haste'], ids: ['6617', '3158', '6620', '3504', '3107', '6621'], note: '提高治疗与护盾频率，给队伍核心持续创造输出空间。' },
-  { id: 'assassin', name: '物理爆发流', type: 'assassin', tags: ['ad', 'spell', 'dash'], ids: ['3142', '3158', '6696', '6694', '3814', '6699'], note: '以穿甲和技能爆发寻找击杀窗口，避免承担长时间正面承伤。' },
-  { id: 'apAssassin', name: '法系突进流', type: 'apAssassin', tags: ['ap', 'spell', 'dash'], ids: ['3100', '3020', '4646', '3089', '3135', '3157'], note: '利用法强与进场爆发，保留中娅作为容错。' },
-];
 
-const EXCLUSIVE = [
-  ['3036', '3033', '6694', '3071'], ['3135', '3137'], ['3053', '3156', '6673'],
-  ['3078', '3100', '6662', '2510', '3508'], ['3003', '3004', '3119'], ['3074', '3748', '6698', '6631'],
-];
 export function itemsConflict(a, b, db) {
   if (a === b) return true;
   if (db.itemMap.get(a)?.tags.includes('Boots') && db.itemMap.get(b)?.tags.includes('Boots')) return true;
-  return EXCLUSIVE.some(group => group.includes(a) && group.includes(b));
+  return advice.exclusiveItems.some(group => group.includes(a) && group.includes(b));
 }
 export function canEquip(id, ids, champion, db) {
   const item = db.itemMap.get(id);
@@ -225,15 +199,15 @@ export function recommendBuilds(state, db, previewId = null) {
   const lock = [...state.owned];
   const specialBuilds = [];
   if (rules.some(r => r.grants?.includes('spellCrit')) && f.spell >= .65 && f.ap >= .6)
-    specialBuilds.push({ id: 'spellCrit', name: '技能暴击流', type: 'mage', tags: ['ap', 'spell', 'crit'], ids: ['6655', '3020', '3089', '3031', '3135', '3157'], note: '技能可暴击后，把无尽作为可选的暴击增幅；仍保留法强与法穿基础。' });
+    specialBuilds.push(advice.specialBuilds.spellCrit);
   if (rules.some(r => r.grants?.includes('dotCrit')) && f.dot >= .5 && f.ap >= .6)
-    specialBuilds.push({ id: 'dotCrit', name: '灼烧暴击流', type: 'burn', tags: ['ap', 'dot', 'crit'], ids: ['2503', '3020', '6653', '3031', '3135', '3089'], note: '易损让持续伤害和装备效果可以暴击，围绕灼烧与暴击增幅组织装备。' });
+    specialBuilds.push(advice.specialBuilds.dotCrit);
   if (rules.some(r => r.grants?.includes('onhit')) && f.spell >= .65 && f.ap >= .6)
-    specialBuilds.push({ id: 'spellOnhit', name: '技能触发特效', type: 'mage', tags: ['ap', 'spell', 'onhit'], ids: ['3115', '3020', '3100', '3089', '3135', '3157'], note: '虚幻武器让技能触发攻击特效，纳什之牙可通过技能兑现收益。仍需留意每目标触发冷却。' });
+    specialBuilds.push(advice.specialBuilds.spellOnhit);
   if (rules.some(r => r.tags.includes('mana')) && f.mana > 0 && f.ap >= .6)
-    specialBuilds.push({ id: 'mana', name: '法力成长流', type: 'mage', tags: ['mana', 'ap', 'spell'], ids: ['3003', '3020', '6657', '3089', '3135', '3157'], note: '用法力装备兑现海克斯的法力收益；女神泪与时光之杖需要成长时间。' });
-  const ruleBuilds = [...BUILDS, ...specialBuilds];
-  const closestTemplate = ids => [...BUILDS].sort((a, b) => {
+    specialBuilds.push(advice.specialBuilds.mana);
+  const ruleBuilds = [...advice.builds, ...specialBuilds];
+  const closestTemplate = ids => [...advice.builds].sort((a, b) => {
     const fit = build => mean(build.tags.map(tag => f[tag] || 0)) * 30
       + (build.type === profile.type ? 12 : 0) + build.ids.filter(id => ids.includes(id)).length * 8;
     return fit(b) - fit(a);

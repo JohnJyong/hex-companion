@@ -36,6 +36,25 @@ export function validateSession(input, db) {
   };
 }
 
+// Only local restoration migrates references removed by a catalog update.
+// Imports still use validateSession and report invalid input to the player.
+export function restoreSession(input, db) {
+  try { return {state:validateSession(input, db), migrated:false}; }
+  catch (error) {
+    if (input?.schema !== 1 || !Array.isArray(input.selected) || !Array.isArray(input.owned)
+        || !Array.isArray(input.candidates) || input.candidates.length !== 3) throw error;
+    const champion = db.championMap.get(input.championId);
+    const selected = champion ? input.selected.filter(id => db.augmentMap.has(id)) : [];
+    const candidates = input.candidates.map(id => champion && db.augmentMap.get(id)?.tier === input.tier ? id : null);
+    const owned = [];
+    for (const id of input.owned) {
+      if (champion && db.itemMap.has(id) && canEquip(id, owned, champion, db)) owned.push(id);
+    }
+    const state = validateSession({...input, championId:champion?.id ?? null, selected, candidates, owned}, db);
+    return {state, migrated:true};
+  }
+}
+
 export function chooseAugment(state, id, db) {
   if (!state.championId) throw new Error('请先选择英雄');
   if (!state.candidates.includes(id)) throw new Error('只能选择本轮候选中的海克斯');

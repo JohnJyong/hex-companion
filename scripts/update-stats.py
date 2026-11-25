@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Import a pinned, attributed non-commercial ARAM: Mayhem statistical snapshot.
 
-This is an explicit developer action, not a background updater. All raw files
-are checked against the same tagged manifest before either output is replaced.
+Check all raw files against the same tagged manifest before replacing the outputs.
 """
 import argparse
+from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -49,8 +49,13 @@ for name in files:
     cached.write_bytes(raw)
     tables[name] = json.loads(raw)
 
-catalog = json.loads((ROOT / 'app/data/catalog.json').read_text())
+catalog = json.loads((ROOT / 'app/data/catalog.json').read_text(encoding='utf-8'))
 raw_meta = tables['meta.json']
+if (not catalog['meta']['dataDragonVersion'].startswith(manifest['patch'] + '.')
+        or raw_meta['patch'] != manifest['patch'] or raw_meta['snapshot_at'] != manifest['snapshot_at']
+        or raw_meta['mode'] != 'normal' or raw_meta.get('license') != 'CC BY-NC 4.0'
+        or raw_meta['matches']['valid'] != manifest['matches']):
+    raise ValueError('Update the matching KIWI catalog first; the three statistical tables must share one snapshot')
 source = {
     'name': 'AramHex 海克斯大乱斗统计',
     'url': f'https://github.com/czgreat/aramhex-data/tree/{args.ref}/{data_path}',
@@ -64,13 +69,21 @@ meta = {
     'schema': 1, 'mode': 'KIWI', 'modeName': '海克斯大乱斗（ARAM: Mayhem）',
     'rule': 'normal', 'ruleName': '常规', 'band': 'all', 'bandName': '全体样本',
     'patch': manifest['patch'],
-    'displayPatch': catalog['meta']['patch'] if catalog['meta']['dataDragonVersion'].startswith(manifest['patch'] + '.') else manifest['patch'],
+    'displayPatch': catalog['meta']['patch'],
     'asOf': manifest['snapshot_at'], 'window': manifest['window'],
     'matches': manifest['matches_detail'], 'lowSampleThreshold': raw_meta.get('low_sample_threshold', 3000),
     'source': source, 'limitations': raw_meta['limitations'],
 }
 active_augments = {str(a['gameId']): tables['augments.json'][str(a['gameId'])]
                    for a in catalog['augments'] if str(a['gameId']) in tables['augments.json']}
+hero_data = {
+    'meta': {**meta, 'retrievedAt': date.today().isoformat(), 'regions': raw_meta['regions'],
+             'heroParticipations': raw_meta['hero_participations'],
+             'source': {**source, 'dataUrl': f'https://github.com/czgreat/aramhex-data/blob/{args.ref}/{data_path}/heroes.json',
+                        'manifestUrl': f'https://github.com/czgreat/aramhex-data/blob/{args.ref}/latest.json',
+                        'sha256': manifest['files']['heroes.json']['sha256']}},
+    'heroes': tables['heroes.json'],
+}
 augment_data = {
     'meta': {**meta, 'excludedAugments': raw_meta.get('excluded_augments', {}),
              'deltaDefinition': '(hero_augment_win_rate - hero_baseline_win_rate) * 100; percentage points, observational',
@@ -88,7 +101,7 @@ item_data = {
     'equipmentHeroes': tables['equipment_recommendation_heroes.json'],
     'itemMetadata': tables['item_metadata.json'],
 }
-for filename, value in [('augment-stats.json', augment_data), ('item-stats.json', item_data)]:
+for filename, value in [('champion-stats.json', hero_data), ('augment-stats.json', augment_data), ('item-stats.json', item_data)]:
     target = ROOT / 'app/data' / filename
     temp = target.with_suffix('.json.tmp')
     temp.write_text(json.dumps(value, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')

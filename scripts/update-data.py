@@ -10,6 +10,7 @@ import html
 import json
 import pathlib
 import re
+import shutil
 import time
 import urllib.request
 
@@ -17,12 +18,16 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument('--version', default='16.22.1')
 parser.add_argument('--as-of', default='2026-11-17')
+parser.add_argument('--display-patch', help='Public patch label, for example 26.23')
 parser.add_argument('--skip-assets', action='store_true')
 args = parser.parse_args()
 if not re.fullmatch(r'\d+\.\d+\.\d+', args.version):
     raise SystemExit('Use a Data Dragon version such as 16.22.1')
 version = args.version
 patch = '.'.join(version.split('.')[:2])
+display_patch = args.display_patch or f'{int(version.split(".")[0]) + 10}.{version.split(".")[1]}'
+if not re.fullmatch(r'\d{1,3}\.\d{1,3}', display_patch):
+    parser.error('Invalid public patch label')
 rawdir = ROOT / 'data/raw' / version
 rawdir.mkdir(parents=True, exist_ok=True)
 base = f'https://raw.communitydragon.org/{patch}'
@@ -62,7 +67,7 @@ if not all(fetched):
     raise SystemExit('Source fetch incomplete; the installed catalog was not replaced.')
 
 def read(name):
-    return json.loads((rawdir / (name + '.json')).read_text())
+    return json.loads((rawdir / (name + '.json')).read_text(encoding='utf-8'))
 
 strings = read('strings')['entries']
 
@@ -169,21 +174,26 @@ for key, item in read('items')['data'].items():
     jobs.append((f'{dd}/img/item/{key}.png', ROOT / f'app/assets/items/{key}.png'))
 
 if not args.skip_assets:
+    # The same icon filename can contain different art in a later game patch.
+    cached_jobs = [(url, rawdir / dest.relative_to(ROOT / 'app')) for url, dest in jobs]
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        results = list(executor.map(lambda job: download(*job), jobs))
+        results = list(executor.map(lambda job: download(*job), cached_jobs))
     print(f'Offline images: {sum(results)}/{len(results)}', flush=True)
     if not all(results):
         raise SystemExit('Asset fetch incomplete. Retry; already-downloaded assets are cached.')
+    for (_, cached), (_, dest) in zip(cached_jobs, jobs):
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(cached, dest)
 
 catalog = {
     'meta': {
-        'schema': 1, 'patch': f'26.{patch.split(".")[1]}', 'dataDragonVersion': version,
+        'schema': 1, 'patch': display_patch, 'dataDragonVersion': version,
         'asOf': args.as_of, 'mode': 'KIWI', 'modeName': '海克斯大乱斗',
         'note': '客户端符文池快照；服务器热更新及国服开放情况以实际对局为准。动态数值已省略，推荐为机制规则评分。',
         'sources': [
             {'name': 'Riot Data Dragon · 英雄与装备', 'url': 'https://developer.riotgames.com/docs/lol#data-dragon'},
             {'name': 'CommunityDragon · 中文客户端数据', 'url': f'{base}/plugins/rcp-be-lol-game-data/global/zh_cn/v1/augment-lists.json'},
-            {'name': f'Riot Games · 26.{patch.split(".")[1]} 版本说明', 'url': f'https://www.leagueoflegends.com/en-us/news/game-updates/league-of-legends-patch-26-{patch.split(".")[1]}-notes/'},
+            {'name': f'Riot Games · {display_patch} 版本说明', 'url': f'https://www.leagueoflegends.com/en-us/news/game-updates/league-of-legends-patch-{display_patch.replace(".", "-")}-notes/'},
             {'name': 'Riot Games · 模式规则', 'url': 'https://support.riotgames.com/en-us/league-of-legends/events/league-of-legends-aram-mayhem-game-mode'},
         ],
     },
@@ -191,7 +201,7 @@ catalog = {
 }
 target = ROOT / 'app/data/catalog.json'
 temp = target.with_suffix('.tmp')
-temp.write_text(json.dumps(catalog, ensure_ascii=False, separators=(',', ':')))
+temp.write_text(json.dumps(catalog, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 temp.replace(target)
 print(f'Catalog: {len(champions)} champions, {len(augments)} augments, {len(items)} items', flush=True)
 print('Unverified effects:', ', '.join(x['name'] for x in augments if x['descriptionScope'] == 'unverified') or 'none')

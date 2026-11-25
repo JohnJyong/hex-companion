@@ -1,5 +1,10 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('desktop', Object.freeze({
+  loadData: () => ipcRenderer.invoke('data:load'),
+  checkDataUpdates: () => ipcRenderer.invoke('data:check'),
+  setAutomaticDataUpdates: enabled => ipcRenderer.invoke('data:auto', enabled),
+  applyDataUpdate: () => ipcRenderer.invoke('data:apply'),
+  onDataStatus: callback => { const fn = (_event, state) => callback(state); ipcRenderer.on('data:status', fn); return () => ipcRenderer.removeListener('data:status', fn); },
   setChampSelectEnabled: enabled => ipcRenderer.invoke('select:enabled', enabled),
   onChampSelectStatus: callback => { const fn=(_event,state)=>callback(state); ipcRenderer.on('select:status',fn); return ()=>ipcRenderer.removeListener('select:status',fn); },
   captureWindows: () => ipcRenderer.invoke('capture:windows'),

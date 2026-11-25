@@ -55,7 +55,7 @@ function cardRectangles(layout) {
   }));
 }
 
-function createCardOverlays({BrowserWindow,screen,preloadPath,htmlPath,platform=process.platform,onVisibility=()=>{}}) {
+function createCardOverlays({BrowserWindow,screen,preloadPath,htmlPath,platform=process.platform,onVisibility=()=>{},getIconBase=()=>''}) {
   let enabled=true,gameVisible=false,payload=null,build=null,gameBounds=null;
   const windows=[];
   const buildSlot=3;
@@ -128,7 +128,7 @@ function createCardOverlays({BrowserWindow,screen,preloadPath,htmlPath,platform=
       const height = 117, inset = Math.round(clamp(area.width * .008, 6, 20));
       if (width >= 200 && area.height >= height + 60) {
         draw(buildSlot, {x:Math.round(area.x+area.width-width-inset), y:Math.round(area.y+clamp(area.height*.066,42,100)), width, height},
-          {build, recordHint: payload?.actionable === true && rects.length === 3});
+          {build, iconBase:getIconBase(), recordHint: payload?.actionable === true && rects.length === 3});
       } else hideSlot(buildSlot);
     } else {
       hideSlot(buildSlot);

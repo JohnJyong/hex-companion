@@ -45,3 +45,9 @@ dialog{background:#171f2a;color:var(--text);border:1px solid #3c4b60;border-radi
 .guide-evidence p,.guide-card .guide-note { font-size:12px; color:#a8b7c3; }
 
 .build-panel{scroll-margin-top:52px}.candidate-guide{margin-top:4px;text-align:left}
+
+.update-toggle,.update-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.update-toggle{font-size:12px;cursor:pointer}
+.update-toggle input{width:16px;height:16px;accent-color:var(--teal)}
+.update-actions{flex-wrap:wrap;justify-content:flex-end}
+#data-updates .setting-row{flex-wrap:wrap;gap:10px}

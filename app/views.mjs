@@ -20,7 +20,7 @@ export function renderStats(db, dataset, query='', role='all', sort='winRate') {
     <div class="filter-row stats-filters">${[['all','全部定位'],...Object.entries(roleNames)].map(([id,label])=>`<button class="filter-pill ${role===id?'active':''}" data-action="stats-role" data-value="${id}">${label}</button>`).join('')}</div>
     ${status.warnings.length ? `<div class="notice">${status.warnings.map(e).join('<br>')}</div>`:''}
     <div id="stats-results">${statsRows(db,dataset,query,role,sort)}</div>
-    <div class="panel stats-source"><p>统计反映历史对局表现；阵容、熟练度与海克斯选择都会影响结果。出场占比是该英雄出场次数 ÷ 所有英雄出场次数，不是选人界面被选中的概率。</p><p>来源：AramHex Data · CC BY-NC 4.0，仅限非商业使用。软件附带快照，未接入自动更新。</p><button class="text-btn" data-action="external" data-url="https://github.com/czgreat/aramhex-data">查看数据来源 ↗</button></div>`;
+    <div class="panel stats-source"><p>统计反映历史对局表现；阵容、熟练度与海克斯选择都会影响结果。出场占比是该英雄出场次数 ÷ 所有英雄出场次数，不是选人界面被选中的概率。</p><p>来源：AramHex Data · CC BY-NC 4.0，仅限非商业使用。在「设置与数据」可查看当前版本和检查更新。</p><button class="text-btn" data-action="external" data-url="${e(status.source?.manifestUrl || status.source?.url || 'https://github.com/czgreat/aramhex-data')}">查看数据来源 ↗</button></div>`;
 }
 
 export function statsRows(db, dataset, query='', role='all', sort='winRate') {

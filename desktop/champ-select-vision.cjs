@@ -47,11 +47,11 @@ function portraitSignature(image) {
   return Float32Array.from(values, value => value/length);
 }
 
-function createChampionBank(nativeImage, catalog, dataset, appRoot) {
+function createChampionBank(nativeImage, catalog, dataset, appRoot, icons = null) {
   const portraits = [], titles = new Map(), statistics = new Map();
   const total = catalog.champions.filter(c => lookupChampionStats(dataset,c,catalog.meta)?.rank).length;
   for (const champion of catalog.champions) {
-    const image = nativeImage.createFromBuffer(readFileSync(path.join(appRoot, champion.icon)));
+    const image = nativeImage.createFromBuffer(icons ? icons.get(champion.icon) : readFileSync(path.join(appRoot, champion.icon)));
     if (!image.isEmpty()) {
       const {width,height} = image.getSize();
       const pad = Math.round(Math.min(width,height)*.055);

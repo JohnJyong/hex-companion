@@ -1,9 +1,9 @@
-window.desktop.onOverlay(({build, recordHint}) => {
+window.desktop.onOverlay(({build, recordHint, iconBase = ''}) => {
   if (!build) return;
   const [next, ...later] = build.purchases;
   const icon = document.getElementById('item-icon');
   icon.hidden = !next;
-  if (next) icon.src = 'assets/items/' + next.id + '.png';
+  if (next) icon.src = iconBase + 'assets/items/' + next.id + '.png';
   else icon.removeAttribute('src');
   document.getElementById('hero').textContent = build.hero;
   document.getElementById('caption').textContent = next ? '下一件' + (build.reason ? ' · ' + build.reason : '') : '已购成装';

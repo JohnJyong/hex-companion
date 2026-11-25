@@ -1,3 +1,4 @@
+import {manualDataProfile} from './fixtures/manual-data-profile.mjs';
 import { _electron as electron } from 'playwright';
 import { expect } from 'playwright/test';
 import assert from 'node:assert/strict';
@@ -8,7 +9,7 @@ import { resolve, join } from 'node:path';
 const root = resolve(import.meta.dirname, '..');
 const temp = await mkdtemp(join(tmpdir(), 'hex-companion-e2e-'));
 await mkdir(resolve(root, 'artifacts'), { recursive: true });
-const app = await electron.launch({ args: ['.'], cwd: root, env: { ...process.env, HEX_COMPANION_TEST_USER_DATA: join(temp, 'profile') }, timeout: 30000 });
+const app = await electron.launch({ args: ['.'], cwd: root, env: { ...process.env, HEX_COMPANION_TEST_USER_DATA: await manualDataProfile(join(temp, 'profile')) }, timeout: 30000 });
 const page = await app.firstWindow();
 page.setDefaultTimeout(10000);
 const errors = [];

@@ -14,7 +14,7 @@ const limited = (value, fallback, length) => {
   return Number.isFinite(count) ? Math.min(length, Math.max(0, Math.floor(count))) : Math.min(length, fallback);
 };
 
-function safeSourceUrl(value) {
+export function safeSourceUrl(value) {
   if (typeof value !== 'string' || value.length > 2048 || /[\u0000-\u0020\u007f\\]/u.test(value)) return null;
   try {
     const url = new URL(value);
