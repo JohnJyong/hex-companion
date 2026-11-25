@@ -15,6 +15,8 @@ npm ci
 npm start
 ```
 
+如果访问 GitHub 依赖已配置的 `HTTPS_PROXY`，可在同一个 PowerShell 窗口运行 `$env:ELECTRON_GET_USE_PROXY = "1"` 后重试。Electron 会通过该代理下载运行时。
+
 ## 玩一局
 
 1. **选人**　先打开助手，再切回国服中文客户端。出现「可用」英雄栏后，左侧队伍和顶部备选头像会显示对应英雄的模式胜率。这里统计的是英雄在样本对局中的表现，个人账号战绩不参与计算。
@@ -58,7 +60,7 @@ npm run package:win
 
 | 内容 | 来源与许可 |
 | --- | --- |
-| 海克斯参谋原创代码 | [MIT](LICENSE) |
+| 海克斯参谋原创代码 | 源码附 [MIT 许可证](https://github.com/JohnJyong/hex-companion/blob/main/LICENSE)，Windows 打包目录附 `LICENSE-HexCompanion.txt`。 |
 | 英雄、海克斯与装备统计 | 海克斯大乱斗统计数据（github.com/czgreat/aramhex-data），CC BY-NC 4.0，仅限非商业使用。[数据与许可](https://github.com/czgreat/aramhex-data/blob/data-v18/LICENSE) |
 | 社区搭配索引 | [数据来源：arammayhem.com](https://arammayhem.com/data/)（[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)） |
 | 本地 OCR 与简中模型 | Tesseract.js、Tesseract.js-core 和 tessdata_fast（Apache-2.0）。[第三方声明](THIRD_PARTY_NOTICES.md) |

@@ -1,6 +1,7 @@
 # Third-party notices
 
-The original Hex Companion code is distributed under the [MIT License](LICENSE).
+The original Hex Companion code is distributed under the [MIT License](https://github.com/JohnJyong/hex-companion/blob/main/LICENSE).
+The Windows distribution includes it as `LICENSE-HexCompanion.txt` alongside Electron's own license.
 The terms below apply to the separately sourced data, artwork, software and OCR model.
 
 ## Community guide indexes — arammayhem.com, CC BY 4.0

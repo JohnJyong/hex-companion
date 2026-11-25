@@ -69,27 +69,44 @@ const until = async predicate => {
 const visibility = () => app.evaluate(() => globalThis.overlayRecords.map(window => window.isVisible()));
 try {
   await until(() => app.evaluate(() => Boolean(globalThis.manager)));
-  // macOS constrains native windows to its 1512px display on this host. Preserve
-  // the measured geometry's proportions inside that work area; the exported
-  // reference image below still uses the original full-resolution coordinates.
-  const workArea = await app.evaluate(({ screen }) => screen.getPrimaryDisplay().workArea);
+  // The capture protocol uses physical pixels on Windows, including on scaled displays.
+  const workArea = await app.evaluate(({ screen }) => {
+    const area = screen.getPrimaryDisplay().workArea;
+    return process.platform === 'win32' ? screen.dipToScreenRect(null, area) : area;
+  });
   const nativeScale = Math.min(1, (workArea.width - 80) / frame.width, (workArea.height - 80) / frame.height);
   const nativePayload = { ...payload, layout: {
     width: frame.width * nativeScale, height: frame.height * nativeScale,
     bounds: { x: workArea.x + 40, y: workArea.y + 40, width: frame.width * nativeScale, height: frame.height * nativeScale },
     boxes: payload.layout.boxes.map(box => Object.fromEntries(Object.entries(box).map(([key, value]) => [key, value * nativeScale]))),
   } };
-  const nativeRects = cardRectangles(nativePayload.layout);
+  const nativeRects = await app.evaluate(({ screen }, pixels) => pixels.map(rect => {
+    const bounds = process.platform === 'win32' ? screen.screenToDipRect(null, rect) : rect;
+    return { ...bounds, width: Math.max(160, bounds.width), height: Math.max(80, bounds.height) };
+  }), cardRectangles(nativePayload.layout));
   await app.evaluate((_electron, value) => { globalThis.manager.setGameVisible(true); globalThis.manager.update(value); }, nativePayload);
   try { await until(async () => (await visibility()).length === 3 && (await visibility()).every(Boolean)); }
   catch (error) {
     const diagnostic = await app.evaluate(() => globalThis.overlayRecords.map(window => ({ visible: window.isVisible(), loading: window.webContents.isLoading(), url: window.webContents.getURL() })));
     throw new Error(`${error.message}: ${JSON.stringify(diagnostic)}`);
   }
+  // A visible native window can still be waiting for its first compositor frame.
+  let cornerAlphas;
+  await until(async () => {
+    cornerAlphas = await app.evaluate(async () => Promise.all(globalThis.overlayRecords.map(async window => {
+      try {
+        const capture = await window.webContents.capturePage();
+        return capture.isEmpty() ? null : capture.toBitmap()[3];
+      } catch (error) {
+        if (error.message === 'UnknownVizError') return null;
+        throw error;
+      }
+    })));
+    return cornerAlphas.every(Number.isInteger);
+  });
   const actual = await app.evaluate(async () => Promise.all(globalThis.overlayRecords.map(async window => ({
     bounds: window.getBounds(), visible: window.isVisible(), focused: window.isFocused(), focusable: window.isFocusable(),
     transparent: window.testOptions.transparent, requestedBackground: window.testOptions.backgroundColor, ignore: window.testIgnore,
-    cornerAlpha: (await window.webContents.capturePage()).toBitmap()[3],
     alwaysOnTop: window.isAlwaysOnTop(),
     statistics: await window.webContents.executeJavaScript("document.querySelector('#statistics').textContent"),
     rank: await window.webContents.executeJavaScript("document.querySelector('#rank').textContent"),
@@ -99,7 +116,7 @@ try {
     const window = actual[i], stats = payload.cards[i].statistics;
     assert.deepEqual(window.bounds, nativeRects[i], 'native window coordinates derive from the observed title boxes');
     assert.equal(window.transparent, true); assert.equal(window.requestedBackground, '#00000000');
-    assert.equal(window.cornerAlpha, 0, 'the actual renderer surface preserves transparent corners');
+    assert.equal(cornerAlphas[i], 0, 'the actual renderer surface preserves transparent corners');
     assert.equal(window.focusable, false); assert.equal(window.focused, false);
     assert.equal(window.alwaysOnTop, true);
     assert.deepEqual(window.ignore, { value: true, options: { forward: true } });
