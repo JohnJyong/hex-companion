@@ -41,6 +41,8 @@ try {
     /更新源暂不可用|无法获取更新|校验失败|已是当前发布版本/.test(document.querySelector('#data-updates')?.innerText || ''),{},{timeout:210000});
   const staged = await data(page);
   assert.ok(staged.status.pending,JSON.stringify(staged.status));
+  if (process.env.HEX_MIN_DATA_REVISION)
+    assert.ok(staged.status.pending.revision >= Number(process.env.HEX_MIN_DATA_REVISION), 'the downloaded manifest includes the published revision');
   assert.deepEqual(before.status.active,staged.status.active);
   await page.locator('[data-action="apply-data"]').click();
   await page.waitForFunction(()=>document.querySelector('#data-updates')?.textContent.includes('已下载到本机'));

@@ -50,7 +50,10 @@ async function fixture(t) {
   const requests = [], state = {feed:bundled, time:Date.parse('2026-11-25T00:00:00Z')};
   const fetcher = async url => {
     assert.ok(url.startsWith(CHANNEL));
-    const key = url.slice(CHANNEL.length);
+    const key = url.slice(CHANNEL.length).split('?')[0];
+    const query = new URL(url).searchParams;
+    if (key === 'manifest.json') assert.equal(query.get('minute'),String(Math.floor(state.time/60000)));
+    else assert.equal(query.size,0);
     requests.push(key);
     if (state.failure) throw new Error('offline');
     const body = key === 'manifest.json' ? JSON.stringify(state.feed.manifest) : state.feed.files.get(key);

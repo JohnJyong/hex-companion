@@ -20,4 +20,9 @@ jobs:
       - run: node --test tests/data-updates.test.mjs
       - run: npm run package:win
       - name: Upgrade the packaged EXE and relaunch it offline
-        run: node tests/data-updates.e2e.mjs release/HexCompanion-win32-x64/HexCompanion.exe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $manifest = gh api -H 'Accept: application/vnd.github.raw+json' 'repos/${{ github.repository }}/contents/manifest.json?ref=data-v1' | Out-String | ConvertFrom-Json
+          $env:HEX_MIN_DATA_REVISION = $manifest.revision
+          node tests/data-updates.e2e.mjs release/HexCompanion-win32-x64/HexCompanion.exe

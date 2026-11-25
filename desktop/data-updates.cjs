@@ -21,8 +21,12 @@ async function limitedFile(file, limit) {
   if ((await fs.stat(file)).size > limit) throw new Error('本地数据文件过大');
   return fs.readFile(file);
 }
-async function fetchBytes(fetcher, name, limit) {
-  const response = await fetcher(CHANNEL + name, {cache:'no-store', credentials:'omit', redirect:'error',
+async function fetchBytes(fetcher, name, limit, checkTime) {
+  const url = new URL(name,CHANNEL);
+  // The branch manifest changes in place. Raw GitHub also caches it at the
+  // edge, independently of the Electron profile's HTTP cache.
+  if (name === 'manifest.json') url.searchParams.set('minute', String(Math.floor(checkTime/60000)));
+  const response = await fetcher(url.href, {cache:'no-store', credentials:'omit', redirect:'error',
     signal:AbortSignal.timeout(name === 'manifest.json' ? 18000 : 90000)});
   if (!response.ok || !response.body) throw new Error(`更新源暂不可用（HTTP ${response.status}）`);
   if (Number(response.headers.get('content-length')) > limit) {
@@ -137,7 +141,7 @@ function createDataUpdates({appRoot, storage, fetcher, notify = () => {}, now = 
     await ready();
     phase='checking'; error=''; attempted=now(); emit();
     try {
-      const m = format.validateManifest(JSON.parse(await fetchBytes(fetcher,'manifest.json',MANIFEST_LIMIT)));
+      const m = format.validateManifest(JSON.parse(await fetchBytes(fetcher,'manifest.json',MANIFEST_LIMIT,attempted)));
       const newest = (pending || active).manifest;
       const sameParts = format.PARTS.every(key => m.bundles[key].sha256 === newest.bundles[key].sha256
         && m.bundles[key].bytes === newest.bundles[key].bytes);
