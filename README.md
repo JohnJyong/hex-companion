@@ -71,7 +71,7 @@ npm run package:win
 | 推荐、数据、识别逻辑与对局状态 | `npm test`（需要 Python 3，Windows 命令为 `python`） |
 | 工作台与模拟对局流程 | `npm run test:desktop`、`npm run test:live` |
 | 离线中文 OCR、选卡及选人浮层 | `npm run test:ocr`、`npm run test:overlay`、`npm run test:select` |
-| 从公开数据源升级、保留对局、断网重启 | `npm run test:data:online`（需联网，公开版本须比内置数据新） |
+| 从公开数据源升级、保留对局、断网重启 | `npm run test:data:online`（需联网，公开版本须比内置数据新）。可在 [Windows 验证任务](https://github.com/JohnJyong/hex-companion/actions/workflows/windows-data-check.yml)中运行打包后的 EXE。 |
 | 验证 Windows 包内资源 | 先运行 `npm run test:ocr` 和 `npm run package:win`，再运行 `node tests/packaged.e2e.mjs` |
 
 `app/core/` 实现评分、出装和候选匹配，`desktop/` 负责 Windows 截屏、OCR、浮层与数据缓存。桌面版使用系统网络获取数据，日常识别和查询在本机完成。

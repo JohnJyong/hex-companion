@@ -8,13 +8,16 @@ import {tmpdir} from 'node:os';
 
 const root = path.resolve(import.meta.dirname,'..');
 const entry = path.resolve(process.argv[2] || root);
+const packagedExe = process.platform === 'win32' && path.extname(entry).toLowerCase() === '.exe';
 const profile = await mkdtemp(path.join(tmpdir(),'hex-online-update-'));
 const artifacts = path.join(root,'artifacts');
 await manualDataProfile(profile);
 await mkdir(artifacts,{recursive:true});
 let app;
 async function launch(offline = false) {
-  app = await electron.launch({cwd:root, args:[...(offline ? ['--proxy-server=http://127.0.0.1:9'] : []), entry],
+  const args = offline ? ['--proxy-server=http://127.0.0.1:9'] : [];
+  if (!packagedExe) args.push(entry);
+  app = await electron.launch({cwd:root, args, ...(packagedExe ? {executablePath:entry} : {}),
     env:{...process.env, HEX_COMPANION_TEST_USER_DATA:profile}});
   const page = await app.firstWindow();
   await page.locator('.candidate').first().waitFor();

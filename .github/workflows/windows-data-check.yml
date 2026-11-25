@@ -1,0 +1,23 @@
+name: Verify Windows data updates
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node --test tests/data-updates.test.mjs
+      - run: npm run package:win
+      - name: Upgrade the packaged EXE and relaunch it offline
+        run: node tests/data-updates.e2e.mjs release/HexCompanion-win32-x64/HexCompanion.exe
