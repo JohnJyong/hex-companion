@@ -2,7 +2,7 @@
 
 Windows 助手从这个分支读取游戏资料。当前数据编号、游戏版本、统计截止时间和两个压缩文件的 SHA-256 可在[发布清单](manifest.json)查看。使用方法见[桌面助手 README](https://github.com/JohnJyong/hex-companion/blob/main/README.md)。
 
-`tables-*.json.gz` 包含 KIWI 模式的目录、常规模式全体样本的英雄胜率、英雄与海克斯和装备的组合统计，以及攻略索引。统计表的 `meta.source` 记录原始发布标签、上游文件哈希和许可。攻略条目保留了原始资料链接、适用版本及核对日期。初次独立发布的数据来自 [AramHex data-v20](https://github.com/czgreat/aramhex-data/tree/data-v20/patches/16.23/normal)。
+`tables-*.json.gz` 包含 KIWI 模式的目录、常规模式全体样本的英雄胜率、英雄与海克斯和装备的组合统计，以及攻略索引。统计表的 `meta.source` 记录原始发布标签、上游文件哈希和许可。攻略条目保留了原始资料链接、适用版本及核对日期。发布的推荐规则包含项目维护的英雄适配、海克斯联动、出装模板和装备互斥组，采用[项目 MIT 许可](https://github.com/JohnJyong/hex-companion/blob/main/LICENSE)。初次独立发布的统计来自 [AramHex data-v20](https://github.com/czgreat/aramhex-data/tree/data-v20/patches/16.23/normal)。
 
 `icons-*.json.gz` 按目录路径存储英雄、海克斯和装备的 PNG 图标。客户端只下载内容发生变化的压缩包。更新由[主仓库的发布流程](https://github.com/JohnJyong/hex-companion/actions/workflows/data-channel.yml)维护。
 
