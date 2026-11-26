@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "revision": 3,
+  "revision": 4,
   "patch": "26.23",
-  "statsAsOf": "2026-11-20T08:00:00+08:00",
+  "statsAsOf": "2026-11-26T09:00:00+08:00",
   "bundles": {
     "tables": {
-      "bytes": 665739,
-      "sha256": "745397e4fdd2e1f916695e9170f756c2e2bdfb8857325b744ffac1d1ccd758d3"
+      "bytes": 677322,
+      "sha256": "8b1ebca28f834a26a31d5e8d8fa7f7ca26861c63bdebcecec42a4f4504e8ea9a"
     },
     "icons": {
       "bytes": 6135618,
